@@ -26,9 +26,9 @@ export class ProjectsRepository {
       title: 'Proyecto 3',
       description: 'Descripción 3',
       date: new Date(),
-      categoryId: '3',
       imageUrl: 'https://...',
-      statusIsCompleted: false,
+      status: 'active',
+      categoryId: '3',
     },
   ];
 

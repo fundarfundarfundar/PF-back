@@ -15,9 +15,9 @@ export class DonationsRepository {
       id: 2,
       amount: '90000',
       date: new Date(),
-      user_id: 1,
-      project_id: 1,
-      payment_method: 'Mercado Pago',
+      userId: 1,
+      projectId: 1,
+      paymentMethod: 'Mercado Pago',
     },
     {
       id: 3,
@@ -43,7 +43,6 @@ export class DonationsRepository {
       project_id: 3,
       payment_method: 'Mercado Pago',
     },
-    
   ];
 
   async getDonations() {
