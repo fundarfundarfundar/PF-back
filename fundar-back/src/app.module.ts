@@ -8,7 +8,13 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, ProjectsModule, DonationsModule, FileUploadModule, AuthModule],
+  imports: [
+    UsersModule,
+    ProjectsModule,
+    DonationsModule,
+    FileUploadModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
