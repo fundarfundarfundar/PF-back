@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CategoriesRepository {
-    private categories = [
+  private categories = [
     {
       id: 1,
       categoryName: 'Category 1',
@@ -16,4 +16,8 @@ export class CategoriesRepository {
       categoryName: 'Category 3',
     },
   ];
+
+  async getCategories() {
+    return this.categories;
+  }
 }
