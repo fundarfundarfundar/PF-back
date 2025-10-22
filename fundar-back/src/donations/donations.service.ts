@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
+import { DonationsRepository } from './donations.repository';
 
 @Injectable()
 export class DonationsService {
+
+  constructor(private donationsRepository: DonationsRepository){}
+
   create(createDonationDto: CreateDonationDto) {
     return 'This action adds a new donation';
   }
 
   findAll() {
-    return `This action returns all donations`;
+    return this.donationsRepository.getDonations();
   }
 
   findOne(id: number) {
