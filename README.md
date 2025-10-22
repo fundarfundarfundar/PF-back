@@ -5,7 +5,6 @@ Usuario
 
 id (PK)
 nombre
-apellido
 email
 contraseña
 ciudad
