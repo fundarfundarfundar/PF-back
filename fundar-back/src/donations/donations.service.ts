@@ -5,26 +5,26 @@ import { DonationsRepository } from './donations.repository';
 
 @Injectable()
 export class DonationsService {
+  constructor(private donationsRepository: DonationsRepository) {}
 
-  constructor(private donationsRepository: DonationsRepository){}
-
-  create(createDonationDto: CreateDonationDto) {
-    return 'This action adds a new donation';
+  createDonation(createDonationDto: CreateDonationDto) {
+    return this.donationsRepository.createDonation(createDonationDto);
   }
 
-  findAll() {
+  GetDonations() {
     return this.donationsRepository.getDonations();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} donation`;
+  getDonationById(id: string) {
+    return this.donationsRepository.getDonationById(id);
   }
 
-  update(id: number, updateDonationDto: UpdateDonationDto) {
-    return `This action updates a #${id} donation`;
+  updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
+    return this.donationsRepository.updateDonation(id, updateDonationDto);
   }
 
-  remove(id: number) {
+  deleteDonation(id: string) {
+    return this.donationsRepository.deleteDonation(id);
     return `This action removes a #${id} donation`;
   }
 }

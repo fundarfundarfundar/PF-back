@@ -5,26 +5,25 @@ import { ProjectsRepository } from './projects.repository';
 
 @Injectable()
 export class ProjectsService {
-
   constructor(private projectsRepository: ProjectsRepository) {}
 
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+  createProject(createProjectDto: CreateProjectDto) {
+    return this.projectsRepository.createProject(createProjectDto);
   }
 
-  findAll() {
+  getProjects() {
     return this.projectsRepository.getProjects();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  getProjectById(id: string) {
+    return this.projectsRepository.getProjectById(id);
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  updateProject(id: string, updateProjectDto: UpdateProjectDto) {
+    return this.projectsRepository.updateProject(id, updateProjectDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  removeProject(id: string) {
+    return this.projectsRepository.deleteProject(id);
   }
 }
