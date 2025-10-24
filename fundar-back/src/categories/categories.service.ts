@@ -7,23 +7,23 @@ import { CategoriesRepository } from './categories.repository';
 export class CategoriesService {
   constructor(private categoriesRepository: CategoriesRepository) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  createCategory(createCategoryDto: CreateCategoryDto) {
+    return this.categoriesRepository.createCategory(createCategoryDto);
   }
 
-  findAll() {
+  getCategories() {
     return this.categoriesRepository.getCategories();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  GetCategoryById(id: string) {
+    return this.categoriesRepository.getCategoryById(id);
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  updateCategory(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.categoriesRepository.updateCategory(id, updateCategoryDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  deleteCategory(id: string) {
+    return this.categoriesRepository.deleteCategory(id);
   }
 }

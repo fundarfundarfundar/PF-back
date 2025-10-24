@@ -1,73 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersRepository {
- 
-  private users : User[] = [
-    {
-      id: '1',
-      name: 'Máximo',
-      email: 'maximo@mail.com',
-      password: 'Contraseña1234!',
-      city: 'Santa Fe',
-      country: 'argentina',
-      phone: '1234 567890',
-      birthdate: new Date('1990-01-01'),
-      address: 'Calle Falsa 1234',
-      role: 'admin',
-      // donations: [],
-    },
-    {
-      id: '2',
-      name: 'Francisco',
-      email: 'maximosposetti@mail.com',
-      password: 'Contraseña1234!',
-      city: 'Buenos Aires',
-      country: 'argentina',
-      phone: '4321 098765',
-      birthdate: new Date('1990-01-01'),
-      address: 'Calle Falsa 4321',
-      role: 'admin',
-      // donations: [],
-    },
-    {
-      id: '3',
-      name: 'Julio',
-      email: 'maximosposetti@mail.com',
-      password: 'Contraseña1234!',
-      city: 'Misiones',
-      country: 'argentina',
-      phone: '6789 012345',
-      birthdate: new Date('1990-01-01'),
-      address: 'Calle Falsa 2134',
-      role: 'admin',
-      // donations: [],
-    },
-    {
-      id: '4',
-      name: 'Piero',
-      email: 'piero@mail.com',
-      password: 'Contraseña1234!',
-      city: 'Mendoza',
-      country: 'argentina',
-      phone: '9012 345678',
-      birthdate: new Date('1990-01-01'),
-      address: 'Calle Falsa 4312',
-      role: 'admin',
-      // donations: [],
-    },
-  ];
+ constructor(
+   @InjectRepository(User) private usersRepository: Repository<User>,
+ ) {}
 
-  async getUsers() {
-    return this.users;
-  }
+  // async createUser(createUserDto: CreateUserDto) {
+  //   const newUser = this.usersRepository.create(createUserDto);
+  //   return this.usersRepository.save(newUser);
+  // }
 
-  async findByEmail(email: string): Promise<User | undefined> {
-    return this.users.find(user => user.email === email);
-  } // habria que modificarlo luego de implementar typeorm
+ async getUsers() {
+   return this.usersRepository.find();
+ }
+
+ async getUserById(id: string) {
+   return this.usersRepository.findOneBy({ id });
+ }
+
+  // async updateUser(id: string, updateUserDto: UpdateUserDto) {
+  //   await this.usersRepository.update(id, updateUserDto);
+  //   return this.usersRepository.findOneBy({ id });
+  // }
+
+  // async deleteUser(id: string) {
+  //   return await this.usersRepository.delete(id);
+  // }
+
+  async findByEmail(email: string): Promise<User | null> {
+        try {
+            return await this.usersRepository.findOneBy({email})
+
+        } catch (error) {
+            throw new NotFoundException('Error al buscar el usuario por email')
+        }
+    }
  
-  async findOne(id: string) {
-      return this.users.find(user => user.id === id);
-  }
 }

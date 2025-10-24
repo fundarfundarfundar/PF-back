@@ -6,26 +6,25 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-
   constructor(private usersRepository: UsersRepository) {}
-  
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
 
-  findAll() {
+  // createUser(createUserDto: CreateUserDto) {
+  //   return this.usersRepository.createUser(createUserDto);
+  // }
+
+  async getUsers() {
     return this.usersRepository.getUsers();
   }
 
-  async findOne(id: string) : Promise<User| undefined>  {
-    return this.usersRepository.findOne(id)
+  async getUserById(id: string) : Promise<User| null>  {
+    return this.usersRepository.getUserById(id)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  // updateUser(id: string, updateUserDto: UpdateUserDto) {
+  //   return this.usersRepository.updateUser(id, updateUserDto);
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  // deleteUser(id: string) {
+  //   return this.usersRepository.deleteUser(id);
+  // }
 }
