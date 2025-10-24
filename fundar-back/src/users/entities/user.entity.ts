@@ -6,8 +6,9 @@ export class User {
   email: string;
   password: string;
   city: string;
+  country: string;
   phone: string;
-  birthDate: Date;
+  birthdate: Date;
   address: string;
   role: 'admin' | 'user';
   

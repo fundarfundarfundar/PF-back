@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +17,8 @@ export class UsersService {
     return this.usersRepository.getUsers();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) : Promise<User| undefined>  {
+    return this.usersRepository.findOne(id)
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
