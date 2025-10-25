@@ -24,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
      JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET,
+      secret: 'laclavesecreta',
       signOptions: { expiresIn: '60m' },
     }),
     UsersModule,

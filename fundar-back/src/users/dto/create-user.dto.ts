@@ -52,4 +52,8 @@ export class CreateUserDto {
     @IsDateString()
     birthDate: Date;
 
+    @IsNotEmpty()
+    @IsString()
+    role: 'admin' | 'user';
+
 }
