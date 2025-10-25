@@ -1,9 +1,11 @@
 import { Category } from 'src/categories/entities/category.entity';
+import { Donation } from 'src/donations/entities/donation.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,8 +29,12 @@ export class Project {
   @Column()
   status: 'active' | 'inactive';
 
+  @OneToMany(() => Donation, donation => donation.project)
+  donations: Donation[];
+
   @ManyToOne(() => Category, (category) => category.projects, {
     onDelete: 'CASCADE',
+    // category: Category;
   })
   @JoinColumn({ name: 'category_id' })
   category: Category;

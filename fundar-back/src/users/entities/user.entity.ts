@@ -1,6 +1,7 @@
 import { Donation } from 'src/donations/entities/donation.entity';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -32,6 +33,6 @@ export class User {
   @Column()
   role: 'admin' | 'user';
 
-  @Column() // <-- RELACIÓN CON 'DONATIONS' UNO A MUCHOS (hay q cambiar el decorador y su configuracion {} para crear la relación OneToMany())
-  donations: Donation[];
+  @OneToMany(() => Donation, donation => donation.user)
+  donations?: Donation[];
 }

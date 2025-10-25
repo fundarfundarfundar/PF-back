@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { UsersRepository } from '../users/users.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -37,24 +37,27 @@ export class AuthService {
            user: userPayload,
           }
   }
+   async signUp(user: CreateUserDto) {
+        const userFound = await this.usersRepository.findByEmail(user.email);
+        if (userFound) {
+            return 'El usuario ya existe';
+        }
 
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+
+        if(!hashedPassword) {
+            return 'Error al hashear la contraseña';
+        }
+
+        await this.usersRepository.addOne({
+            ...user,
+            password: hashedPassword,
+        })
+
+        const { password, ...userWithoutPassword } = user; 
+        
+        return userWithoutPassword; 
+    }
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
-}
+ 

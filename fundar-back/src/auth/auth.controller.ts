@@ -8,7 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/loginUserDto';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,23 +23,9 @@ export class AuthController {
    
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
+   @Post('signup')
+      async signUp(@Body() createUser: CreateUserDto){
+      return await this.authService.signUp(createUser)
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-  //   return this.authService.update(+id, updateAuthDto);
-  // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
+            }
 }

@@ -39,5 +39,18 @@ export class UsersRepository {
             throw new NotFoundException('Error al buscar el usuario por email')
         }
     }
+  async addOne(user: Partial<User>): Promise<Partial<User>>{
+        try {
+            const newUser = await this.usersRepository.save(user)
+    
+            const {password, ...userWithoutPassword } = newUser
+    
+            return userWithoutPassword
+            
+        } catch (error) {
+            throw new NotFoundException('Error al agregar el usuario')
+        }
+
+  }
  
 }

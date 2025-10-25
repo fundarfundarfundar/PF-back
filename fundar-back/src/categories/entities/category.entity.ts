@@ -6,9 +6,9 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Project, (product) => product.category)
+  @OneToMany(() => Project, (project) => project.category)
   projects: Project[];
 }

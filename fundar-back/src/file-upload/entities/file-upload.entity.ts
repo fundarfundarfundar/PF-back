@@ -1,5 +1,8 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Project } from 'src/projects/entities/project.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class FileUpload {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -10,9 +13,9 @@ export class FileUpload {
   @Column()
   type: 'photo' | 'video' | 'document';
 
-  @Column() // <-- RELACIÓN CON 'PROJECT' UNO A UNO (hay q cambiar el decorador y su configuracion {} para crear la relación OneToOne())
-  projectId?: string;
+  @ManyToOne(() => Project, project => project.id, { nullable: true })
+  project?: Project;
 
-  @Column() // <-- RELACIÓN CON 'USER' UNO A UNO (hay q cambiar el decorador y su configuracion {} para crear la relación OneToOne())
-  userId?: string;
+  @ManyToOne(() => User, user => user.id, { nullable: true })
+  user?: User;
 }
