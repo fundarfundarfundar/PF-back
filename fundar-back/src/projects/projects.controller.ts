@@ -15,11 +15,6 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.createProject(createProjectDto);
-  }
-
   @Get()
   getProjects() {
     return this.projectsService.getProjects();
@@ -28,6 +23,11 @@ export class ProjectsController {
   @Get(':id')
   getProjectById(@Param('id') id: string) {
     return this.projectsService.getProjectById(id);
+  }
+
+  @Post()
+  create(@Body() createProjectDto: CreateProjectDto) {
+    return this.projectsService.createProject(createProjectDto);
   }
 
   @Put(':id')

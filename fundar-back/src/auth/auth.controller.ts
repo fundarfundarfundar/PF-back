@@ -19,8 +19,11 @@ export class AuthController {
   async signIn(@Body() credentials: LoginUserDto){
 
         const { email, password } = credentials;
-        return this.authService.singIn(email, password)
-   
+        const result = await  this.authService.singIn(email, password)
+        return{
+                message: `Inicio de sesión exitoso `,
+                result
+        }   
   }
 
    @Post('signup')

@@ -34,7 +34,6 @@ export class Project {
 
   @ManyToOne(() => Category, (category) => category.projects, {
     onDelete: 'CASCADE',
-    // category: Category;
   })
   @JoinColumn({ name: 'category_id' })
   category: Category;
