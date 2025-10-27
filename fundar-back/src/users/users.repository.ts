@@ -9,11 +9,6 @@ export class UsersRepository {
    @InjectRepository(User) private usersRepository: Repository<User>,
  ) {}
 
-  // async createUser(createUserDto: CreateUserDto) {
-  //   const newUser = this.usersRepository.create(createUserDto);
-  //   return this.usersRepository.save(newUser);
-  // }
-
  async getUsers() {
    return this.usersRepository.find();
  }
@@ -21,15 +16,6 @@ export class UsersRepository {
  async getUserById(id: string) {
    return this.usersRepository.findOneBy({ id });
  }
-
-  // async updateUser(id: string, updateUserDto: UpdateUserDto) {
-  //   await this.usersRepository.update(id, updateUserDto);
-  //   return this.usersRepository.findOneBy({ id });
-  // }
-
-  // async deleteUser(id: string) {
-  //   return await this.usersRepository.delete(id);
-  // }
 
   async findByEmail(email: string): Promise<User | null> {
         try {
@@ -52,8 +38,52 @@ export class UsersRepository {
         } catch (error) {
             console.error(error); 
             throw new NotFoundException('Error al agregar el usuario');
-}
+        }
 
-  }
+      }
+
+      async update(id: string, user: Partial<User>): Promise<Partial<User>> {
+        try {
+      
+            await this.usersRepository.update(id, user)
+    
+            const updateUser = await this.usersRepository.findOneBy({id})
+
+            if (!updateUser) {
+
+              throw new NotFoundException('Usuario no encontrado')
+            }
+    
+            const { password, ...userWithoutPassword } = updateUser
+
+            return userWithoutPassword
+            
+        } catch (error) {
+
+            throw new NotFoundException('Error al actualizar el usuario')
+            
+        }
+
+    }
+
+        async delete(id: string): Promise<Partial<User>> {
+        try {
+            const user = await this.usersRepository.findOneBy({id})
+            
+            if(!user) {
+                throw new NotFoundException('User not found')
+            }
+    
+            this.usersRepository.remove(user)
+    
+            const {password, ...userWithoutPassword } = user
+    
+            return userWithoutPassword
+            
+        } catch (error) {
+            throw new NotFoundException('Error al eliminar el usuario')
+            
+        }
+    }
  
 }

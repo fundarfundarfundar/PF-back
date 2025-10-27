@@ -7,10 +7,6 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
-  // createUser(createUserDto: CreateUserDto) {
-  //   return this.usersRepository.createUser(createUserDto);
-  // }
-
   async getUsers() {
     return this.usersRepository.getUsers();
   }
@@ -19,11 +15,12 @@ export class UsersService {
     return this.usersRepository.getUserById(id)
   }
 
-  // updateUser(id: string, updateUserDto: UpdateUserDto) {
-  //   return this.usersRepository.updateUser(id, updateUserDto);
-  // }
+  async update(id: string, updateUser: CreateUserDto) {
 
-  // deleteUser(id: string) {
-  //   return this.usersRepository.deleteUser(id);
-  // }
+            return await this.usersRepository.update(id, updateUser);
+        }
+  async remove(id: string){
+            return await this.usersRepository.delete(id)
+  }
+  
 }

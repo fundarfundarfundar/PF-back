@@ -1,15 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, ParseUUIDPipe, Req, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  // @Post()
-  // createUser(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.createUser(createUserDto);
-  // }
 
   @Get()
   getUsers() {
@@ -21,13 +16,21 @@ export class UsersController {
       return await this.usersService.getUserById(id)
   }
 
-  // @Put(':id')
-  // updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.updateUser(id, updateUserDto);
-  // }
+  @Put(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string, 
+    @Body() updateUser: CreateUserDto,
+    // @Req() req
+    ){
+      // if (req.user.id !== id && req.user.role !== 'admin') {
+      //  throw new UnauthorizedException('No puedes actualizar el perfil de otro usuario');
+      // }
+    return await this.usersService.update(id, updateUser);
+    }
 
-  // @Delete(':id')
-  // deleteUser(@Param('id') id: string) {
-  //   return this.usersService.deleteUser(id);
-  // }
+  @Delete(':id')
+  async remove(@Param('id', ParseUUIDPipe) id: string){
+    return await this.usersService.remove(id)
+  }
+
 }
