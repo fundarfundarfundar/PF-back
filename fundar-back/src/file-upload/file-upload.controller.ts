@@ -27,15 +27,15 @@ export class FileUploadController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Agrega una imágen a un user o project buscandolo por su UUID',
+    summary: 'Agrega una imagen a un user o project buscándolo por su UUID',
   })
   @ApiResponse({
     status: 200,
-    description: 'Imágen agregada',
+    description: 'Imagen agregada',
   })
   @ApiResponse({
-    status: 401,
-    description: 'No autorizado',
+    status: 400,
+    description: 'Archivo inválido o error de validación',
   })
   @Post('uploadImage')
   @UseInterceptors(FileInterceptor('file'))
