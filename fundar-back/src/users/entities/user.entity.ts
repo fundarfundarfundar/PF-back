@@ -30,9 +30,12 @@ export class User {
   @Column()
   address: string;
 
+  @Column({ nullable: true })
+  imageUrl: string;
+
   @Column()
   role: 'admin' | 'user';
 
-  @OneToMany(() => Donation, donation => donation.user)
+  @OneToMany(() => Donation, (donation) => donation.user)
   donations?: Donation[];
 }

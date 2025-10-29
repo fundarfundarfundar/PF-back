@@ -27,7 +27,7 @@ export class FileUploadController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Agrega una imagen del proyecto buscandolo por su UUID',
+    summary: 'Agrega una imágen a un user o project buscandolo por su UUID',
   })
   @ApiResponse({
     status: 200,
@@ -37,11 +37,10 @@ export class FileUploadController {
     status: 401,
     description: 'No autorizado',
   })
-  @Post('uploadImage/:id')
+  @Post('uploadImage')
   @UseInterceptors(FileInterceptor('file'))
   // @UseGuards(AuthGuard)
-  async uploadProduct(
-    @Param('id') userId: string,
+  async uploadImage(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -56,8 +55,8 @@ export class FileUploadController {
       }),
     )
     file: Express.Multer.File,
-    @Body('productId') productId: string,
+    @Body('uuid') uuid: string,
   ) {
-    return this.fileUploadService.uploadProductImage(file, productId, userId);
+    return this.fileUploadService.uploadImage(file, uuid);
   }
 }
