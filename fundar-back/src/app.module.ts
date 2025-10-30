@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     FileUploadModule,
     AuthModule,
     CategoriesModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
