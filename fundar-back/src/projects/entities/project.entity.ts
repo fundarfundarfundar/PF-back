@@ -24,12 +24,12 @@ export class Project {
   date: Date;
 
   @Column()
-  imageUrl: string;
-
-  @Column()
   status: 'active' | 'inactive';
 
-  @OneToMany(() => Donation, donation => donation.project)
+  @Column('text', { array: true, default: [] })
+  imageUrls: string[];
+
+  @OneToMany(() => Donation, (donation) => donation.project)
   donations: Donation[];
 
   @ManyToOne(() => Category, (category) => category.projects, {

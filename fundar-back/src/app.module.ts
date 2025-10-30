@@ -13,17 +13,17 @@ import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
-       TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'Fran290988fss.',
-      database: 'fundar_db',     
+      password: 'admin',
+      database: 'fundar-db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,          
+      synchronize: true,
     }),
-     JwtModule.register({
+    JwtModule.register({
       global: true,
       secret: 'laclavesecreta',
       signOptions: { expiresIn: '60m' },

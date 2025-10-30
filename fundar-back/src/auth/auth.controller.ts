@@ -16,19 +16,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
-  async signIn(@Body() credentials: LoginUserDto){
-
-        const { email, password } = credentials;
-        const result = await  this.authService.singIn(email, password)
-        return{
-                message: `Inicio de sesión exitoso `,
-                result
-        }   
+  async signIn(@Body() credentials: LoginUserDto) {
+    const { email, password } = credentials;
+    const result = await this.authService.singIn(email, password);
+    return {
+      message: `Inicio de sesión exitoso `,
+      result,
+    };
   }
 
-   @Post('signup')
-      async signUp(@Body() createUser: CreateUserDto){
-      return await this.authService.signUp(createUser)
-
-            }
+  @Post('signup')
+  async signUp(@Body() createUser: CreateUserDto) {
+    return await this.authService.signUp(createUser);
+  }
 }

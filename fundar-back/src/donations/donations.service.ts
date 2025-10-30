@@ -25,6 +25,5 @@ export class DonationsService {
 
   deleteDonation(id: string) {
     return this.donationsRepository.deleteDonation(id);
-    return `This action removes a #${id} donation`;
   }
 }

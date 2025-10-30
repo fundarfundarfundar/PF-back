@@ -5,85 +5,73 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersRepository {
- constructor(
-   @InjectRepository(User) private usersRepository: Repository<User>,
- ) {}
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) {}
 
- async getUsers() {
-   return this.usersRepository.find();
- }
+  async getUsers() {
+    return this.usersRepository.find();
+  }
 
- async getUserById(id: string) {
-   return this.usersRepository.findOneBy({ id });
- }
+  async getUserById(id: string) {
+    return this.usersRepository.findOneBy({ id });
+  }
 
   async findByEmail(email: string): Promise<User | null> {
-        try {
-            return await this.usersRepository.findOneBy({email})
-
-        } catch (error) {
-            throw new NotFoundException('Error al buscar el usuario por email')
-        }
+    try {
+      return await this.usersRepository.findOneBy({ email });
+    } catch (error) {
+      throw new NotFoundException('Error al buscar el usuario por email');
     }
-  async addOne(user: Partial<User>): Promise<Omit<User, 'password'>>{
-        try {
-            // const newUser = this.usersRepository.create(user);
+  }
+  async addOne(user: Partial<User>): Promise<Omit<User, 'password'>> {
+    try {
+      // const newUser = this.usersRepository.create(user);
 
-            const newUser = await this.usersRepository.save(user)
-    
-            const {password, ...userWithoutPassword } = newUser
-    
-            return userWithoutPassword
-            
-        } catch (error) {
-            console.error(error); 
-            throw new NotFoundException('Error al agregar el usuario');
-        }
+      const newUser = await this.usersRepository.save(user);
 
+      const { password, ...userWithoutPassword } = newUser;
+
+      return userWithoutPassword;
+    } catch (error) {
+      console.error(error);
+      throw new NotFoundException('Error al agregar el usuario');
+    }
+  }
+
+  async update(id: string, user: Partial<User>): Promise<Partial<User>> {
+    try {
+      await this.usersRepository.update(id, user);
+
+      const updateUser = await this.usersRepository.findOneBy({ id });
+
+      if (!updateUser) {
+        throw new NotFoundException('Usuario no encontrado');
       }
 
-      async update(id: string, user: Partial<User>): Promise<Partial<User>> {
-        try {
-      
-            await this.usersRepository.update(id, user)
-    
-            const updateUser = await this.usersRepository.findOneBy({id})
+      const { password, ...userWithoutPassword } = updateUser;
 
-            if (!updateUser) {
-
-              throw new NotFoundException('Usuario no encontrado')
-            }
-    
-            const { password, ...userWithoutPassword } = updateUser
-
-            return userWithoutPassword
-            
-        } catch (error) {
-
-            throw new NotFoundException('Error al actualizar el usuario')
-            
-        }
-
+      return userWithoutPassword;
+    } catch (error) {
+      throw new NotFoundException('Error al actualizar el usuario');
     }
+  }
 
-        async delete(id: string): Promise<Partial<User>> {
-        try {
-            const user = await this.usersRepository.findOneBy({id})
-            
-            if(!user) {
-                throw new NotFoundException('User not found')
-            }
-    
-            this.usersRepository.remove(user)
-    
-            const {password, ...userWithoutPassword } = user
-    
-            return userWithoutPassword
-            
-        } catch (error) {
-            throw new NotFoundException('Error al eliminar el usuario')
-            
-        }
+  async delete(id: string): Promise<Partial<User>> {
+    try {
+      const user = await this.usersRepository.findOneBy({ id });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      this.usersRepository.remove(user);
+
+      const { password, ...userWithoutPassword } = user;
+
+      return userWithoutPassword;
+    } catch (error) {
+      throw new NotFoundException('Error al eliminar el usuario');
     }
- 
+  }
 }
