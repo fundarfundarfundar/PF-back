@@ -21,19 +21,16 @@ export class UsersRepository {
     try {
       return await this.usersRepository.findOneBy({ email });
     } catch (error) {
-      throw new NotFoundException('Error al buscar el usuario por email');
+      throw new NotFoundException('Error searching user by email');
     }
   }
-  async addOne(user: Partial<User>): Promise<Omit<User, 'password'>> {
+  async addOne(user: Partial<User>): Promise<User> {
     try {
       const newUser = await this.usersRepository.save(user);
-
-      const { password, ...userWithoutPassword } = newUser;
-
-      return userWithoutPassword;
+      return newUser;
     } catch (error) {
       console.error(error);
-      throw new NotFoundException('Error al agregar el usuario');
+      throw new NotFoundException('Error adding user');
     }
   }
 
@@ -44,14 +41,14 @@ export class UsersRepository {
       const updateUser = await this.usersRepository.findOneBy({ id });
 
       if (!updateUser) {
-        throw new NotFoundException('Usuario no encontrado');
+        throw new NotFoundException('User not found');
       }
 
       const { password, ...userWithoutPassword } = updateUser;
 
       return userWithoutPassword;
     } catch (error) {
-      throw new NotFoundException('Error al actualizar el usuario');
+      throw new NotFoundException('Error updating user');
     }
   }
 
@@ -69,7 +66,7 @@ export class UsersRepository {
 
       return userWithoutPassword;
     } catch (error) {
-      throw new NotFoundException('Error al eliminar el usuario');
+      throw new NotFoundException('Error deleting user');
     }
   }
 }

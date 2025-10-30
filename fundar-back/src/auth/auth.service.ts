@@ -19,7 +19,7 @@ export class AuthService {
   /**
    * - Error 401 si el email no existe o la contraseña es incorrecta.
    */
-  async singIn(email: string, password: string) {
+  async signIn(email: string, password: string) {
     const userFound = await this.usersRepository.findByEmail(email);
 
     if (!userFound) {
@@ -51,8 +51,10 @@ export class AuthService {
     return {
       statusCode: 200,
       message: 'Login successful',
-      access_token: token,
-      user: userPayload,
+      result: {
+        access_token: token,
+        user: userPayload,
+      },
     };
   }
 
@@ -82,12 +84,12 @@ export class AuthService {
       });
     }
 
-    await this.usersRepository.addOne({
+    const newUser = await this.usersRepository.addOne({
       ...user,
       password: hashedPassword,
     });
 
-    const { password, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = newUser;
 
     return {
       statusCode: 201,

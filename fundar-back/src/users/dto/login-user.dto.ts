@@ -23,10 +23,10 @@ export class LoginUserDto {
   })
   @Matches(/^[A-Za-z\d!@#$%^&*]+$/, {
     message:
-      'La contraseña solo puede contener los siguientes símbolos: !@#$%^&*',
+      'Password can only contain the following symbols: !@#$%^&*',
   })
   @Matches(/[!@#$%^&*]/, {
-    message: 'La contraseña debe contener al menos un símbolo: !@#$%^&*',
+    message: 'TPassword must contain at least one symbol: !@#$%^&*',
   })
   password: string;
 }

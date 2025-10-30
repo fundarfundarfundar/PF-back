@@ -18,7 +18,7 @@ export class AuthController {
   async signIn(@Body() credentials: LoginUserDto) {
     try {
       const { email, password } = credentials;
-      return await this.authService.singIn(email, password);
+      return await this.authService.signIn(email, password);
     } catch (error) {
       if (
         error instanceof UnauthorizedException ||
@@ -27,12 +27,6 @@ export class AuthController {
       ) {
         throw error;
       }
-      throw new InternalServerErrorException({
-        statusCode: 500,
-        message: 'Unexpected error while signing up user',
-        error: 'UnexpectedError',
-        details: error?.message,
-      });
     }
   }
 
@@ -47,12 +41,6 @@ export class AuthController {
       ) {
         throw error;
       }
-      throw new InternalServerErrorException({
-        statusCode: 500,
-        message: 'Unexpected error while signing up user',
-        error: 'UnexpectedError',
-        details: error?.message,
-      });
     }
   }
 }
