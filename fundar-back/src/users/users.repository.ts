@@ -26,8 +26,6 @@ export class UsersRepository {
   }
   async addOne(user: Partial<User>): Promise<Omit<User, 'password'>> {
     try {
-      // const newUser = this.usersRepository.create(user);
-
       const newUser = await this.usersRepository.save(user);
 
       const { password, ...userWithoutPassword } = newUser;

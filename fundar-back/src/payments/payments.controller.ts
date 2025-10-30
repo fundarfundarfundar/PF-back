@@ -37,8 +37,14 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post('create-session')
-  async createSession(@Body() body: { amount: number, userId: string, projectId: string }) {
-    const url = await this.paymentsService.createSession(body.amount, body.userId, body.projectId);
+  async createSession(
+    @Body() body: { amount: number; userId: string; projectId: string },
+  ) {
+    const url = await this.paymentsService.createSession(
+      body.amount,
+      body.userId,
+      body.projectId,
+    );
     return { url };
   }
 }
