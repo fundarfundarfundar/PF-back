@@ -26,7 +26,7 @@ export class LoginUserDto {
       'Password can only contain the following symbols: !@#$%^&*',
   })
   @Matches(/[!@#$%^&*]/, {
-    message: 'TPassword must contain at least one symbol: !@#$%^&*',
+    message: 'Password must contain at least one symbol: !@#$%^&*',
   })
   password: string;
 }
