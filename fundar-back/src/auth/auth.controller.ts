@@ -63,7 +63,7 @@ async googleAuthRedirect(@Req() req) {
   const user = await this.authService.findOrCreateGoogleUser(email, name);
 
   return {
-    message: 'Inicio de sesión con Google exitoso',
+    message: 'Google login successful',
     user,
   };
 }

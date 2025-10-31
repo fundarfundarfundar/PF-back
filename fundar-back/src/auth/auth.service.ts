@@ -32,7 +32,7 @@ export class AuthService {
 
     if (!userFound.password) {
       // El usuario no tiene contraseña (probablemente registrado con Google)
-      throw new UnauthorizedException('Este usuario debe iniciar sesión con Google');
+      throw new UnauthorizedException('This user must sign in with Google');
     }
 
     const isPasswordMatch = await bcrypt.compare(password, userFound.password);
