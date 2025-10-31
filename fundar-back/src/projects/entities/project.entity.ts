@@ -21,10 +21,16 @@ export class Project {
   description: string;
 
   @Column()
-  date: Date;
+  country: string;
 
-  @Column()
-  status: 'active' | 'inactive';
+  @Column({ nullable: true } )
+  resume: string;
+
+  @Column({ type: 'float', default: 0 })
+  goalAmount: number;
+
+  @Column({ type: 'float', default: 0 })
+  currentAmount: number;
 
   @Column('text', { array: true, default: [] })
   imageUrls: string[];
