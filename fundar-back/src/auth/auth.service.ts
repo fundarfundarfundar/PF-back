@@ -30,6 +30,11 @@ export class AuthService {
       });
     }
 
+    if (!userFound.password) {
+      // El usuario no tiene contraseña (probablemente registrado con Google)
+      throw new UnauthorizedException('Este usuario debe iniciar sesión con Google');
+    }
+
     const isPasswordMatch = await bcrypt.compare(password, userFound.password);
 
     if (!isPasswordMatch) {
@@ -97,4 +102,17 @@ export class AuthService {
       user: userWithoutPassword,
     };
   }
+
+  // En src/auth/auth.service.ts
+async findOrCreateGoogleUser(email: string, name: string) {
+   let user = await this.usersRepository.findByEmail(email);
+  if (!user) {
+    user = await this.usersRepository.addOne({
+      email,
+      name,
+      provider: 'google',
+    });
+  }
+  return user;
+}
 }

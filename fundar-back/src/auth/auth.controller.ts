@@ -5,10 +5,14 @@ import {
   UnauthorizedException,
   InternalServerErrorException,
   ConflictException,
+  Get,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -43,4 +47,24 @@ export class AuthController {
       }
     }
   }
+
+  @Get('google')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth() {}
+
+ @Get('google/callback')
+@UseGuards(AuthGuard('google'))
+async googleAuthRedirect(@Req() req) {
+
+  const profile = req.user;
+  const email = profile.emails[0].value;
+  const name = profile.displayName;
+
+  const user = await this.authService.findOrCreateGoogleUser(email, name);
+
+  return {
+    message: 'Inicio de sesión con Google exitoso',
+    user,
+  };
+}
 }
