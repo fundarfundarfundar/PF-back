@@ -22,6 +22,10 @@ export class ProjectsService {
   updateProject(id: string, updateProjectDto: UpdateProjectDto) {
     return this.projectsRepository.updateProject(id, updateProjectDto);
   }
+  
+  filterByCategory(categoryId: string) {
+    return this.projectsRepository.filterProjectsByCategory(categoryId);
+  }
 
   removeProject(id: string) {
     return this.projectsRepository.deleteProject(id);

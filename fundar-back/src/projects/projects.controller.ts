@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -18,6 +19,11 @@ export class ProjectsController {
   @Get()
   getProjects() {
     return this.projectsService.getProjects();
+  }
+
+  @Get('filter')
+  async filterProjects(@Query('category') category: string) {
+    return this.projectsService.filterByCategory(category);
   }
 
   @Get(':id')

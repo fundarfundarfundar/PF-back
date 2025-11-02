@@ -63,11 +63,11 @@ async googleAuthRedirect(@Req() req, @Res() res) {
 
   const user = await this.authService.findOrCreateGoogleUser(email, name);
 
-  return res.redirect(
-    `http://localhost:3000/google-success?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
-    );
-    // message: 'Google login successful',
-    // user,
+  const token = await this.authService.generateJwtToken(user);
+
   
+  return res.redirect(
+      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
+    );
 }
 }

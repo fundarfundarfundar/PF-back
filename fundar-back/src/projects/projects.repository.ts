@@ -60,6 +60,12 @@ export class ProjectsRepository {
     return this.projectsRepository.findOneBy({ id });
   }
 
+  async filterProjectsByCategory(categoryId: string) {
+    return this.projectsRepository.find({
+      where: { categoryId },
+    });
+  }
+
   async deleteProject(id: string) {
     return this.projectsRepository.delete(id);
   }

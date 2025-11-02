@@ -17,7 +17,7 @@ export class Project {
   @Column()
   title: string;
 
-  @Column({ length: 180 })
+  @Column({ nullable: true, length: 180 })
   resume: string;
 
   @Column({ length: 600 })
@@ -40,6 +40,9 @@ export class Project {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @Column({ name: 'category_id' })
+  categoryId: string;
 
   @OneToMany(() => Donation, (donation) => donation.project)
   donations: Donation[];

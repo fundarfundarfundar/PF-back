@@ -8,6 +8,7 @@ import { UsersRepository } from '../users/users.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -104,7 +105,7 @@ export class AuthService {
   }
 
   // En src/auth/auth.service.ts
-async findOrCreateGoogleUser(email: string, name: string) {
+async findOrCreateGoogleUser(email: string, name: string): Promise<User> {
    let user = await this.usersRepository.findByEmail(email);
   if (!user) {
     user = await this.usersRepository.addOne({
@@ -115,4 +116,14 @@ async findOrCreateGoogleUser(email: string, name: string) {
   }
   return user;
 }
+
+ generateJwtToken(user: User): string {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    return this.jwtService.sign(payload);
+  }
+
 }
