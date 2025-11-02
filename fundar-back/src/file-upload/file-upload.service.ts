@@ -15,45 +15,42 @@ export class FileUploadService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async uploadImage(file: Express.Multer.File, uuid: string) {
-    const projectExists = await this.projectRepository.findOneBy({
-      id: uuid,
-    });
-    const userExists = await this.userRepository.findOneBy({
-      id: uuid,
-    });
+ async uploadImage(file: Express.Multer.File, uuid: string) {
+  const projectExists = await this.projectRepository.findOneBy({ id: uuid });
+  const userExists = await this.userRepository.findOneBy({ id: uuid });
 
-    if (!projectExists && !userExists) {
-      throw new NotFoundException('Usuario/Proyecto inexistente !');
-    }
-
-    const uploadedImage = await this.fileUploadRepository.uploadImage(file);
-    const imageUrl = uploadedImage.secure_url;
-
-    if (projectExists) {
-      const updatedImages = [...(projectExists.imageUrls || []), imageUrl];
-
-      await this.projectRepository.update(uuid, {
-        imageUrls: updatedImages,
-      });
-
-      const updatedProject = await this.projectRepository.findOneBy({
-        // Busco de vuelta el mismo proyecto, esta vez con la imagen nueva ya subida
-        id: uuid,
-      });
-      return updatedProject;
-    }
-
-    if (userExists) {
-      await this.userRepository.update(uuid, {
-        imageUrl,
-      });
-
-      const updatedUser = await this.userRepository.findOneBy({
-        // Busco de vuelta el mismo usuario, esta vez con la imagen nueva ya subida
-        id: uuid,
-      });
-      return updatedUser;
-    }
+  if (!projectExists && !userExists) {
+    throw new NotFoundException('Usuario/Proyecto inexistente !');
   }
+
+  const uploadedImage = await this.fileUploadRepository.uploadImage(file);
+  const imageUrl = uploadedImage.secure_url;
+
+  if (projectExists) {
+    const updatedImages = [...(projectExists.imageUrls || []), imageUrl];
+    await this.projectRepository.update(uuid, { imageUrls: updatedImages });
+    const updatedProject = await this.projectRepository.findOneBy({ id: uuid });
+
+    return {
+      statusCode: 201,
+      message: 'Imagen agregada exitosamente',
+      type: 'project',
+      imageUrl,
+      project: updatedProject,
+    };
+  }
+
+  if (userExists) {
+    await this.userRepository.update(uuid, { imageUrl });
+    const updatedUser = await this.userRepository.findOneBy({ id: uuid });
+
+    return {
+      statusCode: 201,
+      message: 'Imagen agregada exitosamente',
+      type: 'user',
+      imageUrl,
+      user: updatedUser,
+    };
+  }
+}
 }
