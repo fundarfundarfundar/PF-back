@@ -8,6 +8,7 @@ import {
   Get,
   UseGuards,
   Req,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
@@ -54,7 +55,7 @@ export class AuthController {
 
  @Get('google/callback')
 @UseGuards(AuthGuard('google'))
-async googleAuthRedirect(@Req() req) {
+async googleAuthRedirect(@Req() req, @Res() res) {
 
   const profile = req.user;
   const email = profile.emails[0].value;
@@ -62,9 +63,11 @@ async googleAuthRedirect(@Req() req) {
 
   const user = await this.authService.findOrCreateGoogleUser(email, name);
 
-  return {
-    message: 'Google login successful',
-    user,
-  };
+  return res.redirect(
+    `http://localhost:3000/google-success?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
+    );
+    // message: 'Google login successful',
+    // user,
+  
 }
 }
