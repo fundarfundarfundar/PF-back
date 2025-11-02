@@ -51,6 +51,13 @@ export class UsersRepository {
       throw new NotFoundException('Error updating user');
     }
   }
+  async findById(id: string): Promise<User | null> {
+    return await this.usersRepository.findOne({ where: { id } });
+  }
+
+  async save(user: User): Promise<User> {
+    return await this.usersRepository.save(user);
+  }
 
   async delete(id: string): Promise<Partial<User>> {
     try {

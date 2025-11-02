@@ -32,6 +32,15 @@ export class UsersController {
     return await this.usersService.update(id, updateUser);
   }
 
+  //para cambiar el role desde admin
+  @Put(':id/role')
+  async updateRole(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body('role') role: 'admin' | 'user',
+  ) {
+    return await this.usersService.updateRole(id, role);
+  }
+
   @Delete(':id')
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return await this.usersService.remove(id);
