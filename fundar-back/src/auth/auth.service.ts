@@ -60,6 +60,7 @@ export class AuthService {
       result: {
         access_token: token,
         user: userPayload,
+        name: userFound.name,
       },
     };
   }
