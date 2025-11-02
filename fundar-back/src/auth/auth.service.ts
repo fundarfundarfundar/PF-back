@@ -90,6 +90,10 @@ export class AuthService {
       });
     }
 
+    const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(',') ?? [];
+    
+    const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
+
     const newUser = await this.usersRepository.addOne({
       ...user,
       password: hashedPassword,
