@@ -17,7 +17,7 @@ export class Project {
   @Column()
   title: string;
 
-  @Column({ nullable: true, length: 180 })
+  @Column({  length: 180 })
   resume: string;
 
   @Column({ length: 600 })
@@ -29,20 +29,20 @@ export class Project {
   @Column({ type: 'float', default: 0 })
   goalAmount: number;
 
-  @Column({ type: 'float', default: 0 })
+  @Column({nullable: true, type: 'float', default: 0 })
   currentAmount: number;
 
   @Column('text', { array: true, default: [] })
   imageUrls: string[];
 
-  @Column({ default: 'active' })
+  @Column({nullable: true, default: 'active' })
   status: 'active' | 'inactive';
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ name: 'category_id' })
-  categoryId: string;
+  @Column({ name: 'category_id', nullable: true  })
+  categoryId?: string;
 
   @OneToMany(() => Donation, (donation) => donation.project)
   donations: Donation[];
