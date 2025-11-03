@@ -53,4 +53,10 @@ export class FileUploadService {
     };
   }
 }
+
+async uploadTempImage(file: Express.Multer.File): Promise<string> {
+  const uploadedImage = await this.fileUploadRepository.saveTempImage(file);
+  return uploadedImage.secure_url;
+}
+
 }

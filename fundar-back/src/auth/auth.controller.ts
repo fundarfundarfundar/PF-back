@@ -65,30 +65,30 @@ async googleAuthRedirect(@Req() req, @Res() res) {
 
   const token = await this.authService.generateJwtToken(user);
 
-  //  return res.redirect(
-  //      `http://localhost:3000/google-success?token=${token}}`
-  //    );
+  return res.redirect(
+      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
+    );
 
-     if (req.query.redirect === 'true') {
-       return res.redirect(
-         `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
-       );
-     }
+    //  if (req.query.redirect === 'true') {
+    //    return res.redirect(
+    //      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
+    //    );
+    //  }
 
     // Responde igual que /auth/signin
-     return res.json({
-       statusCode: 200,
-       message: 'Login successful',
-       result: {
-         access_token: token,
-         user: {
-           id: user.id,
-           email: user.email,
-           role: user.role,
-           name: user.name,
-         },
-       },
-     });
+    //  return res.json({
+    //    statusCode: 200,
+    //    message: 'Login successful',
+    //    result: {
+    //      access_token: token,
+    //      user: {
+    //        id: user.id,
+    //        email: user.email,
+    //        role: user.role,
+    //        name: user.name,
+    //      },
+    //    },
+    //  });
 
 }
 }

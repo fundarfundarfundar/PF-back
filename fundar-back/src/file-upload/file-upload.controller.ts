@@ -13,30 +13,11 @@ import {
 import { FileUploadService } from './file-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 // import { AuthGuard } from 'src/auth/guards/auth.guard';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
 
-@ApiTags('Subir Imagen - Endpoints')
 @Controller('files')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Agrega una imagen a un user o project buscándolo por su UUID',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Imagen agregada',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Archivo inválido o error de validación',
-  })
   @Post('uploadImage')
   @UseInterceptors(FileInterceptor('file'))
   // @UseGuards(AuthGuard)
@@ -45,7 +26,7 @@ export class FileUploadController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 200 * 1024,
+            maxSize: 500 * 1024,
             message: 'El tamaño de la imagen no debe exceder los 200 kb!',
           }),
           new FileTypeValidator({
@@ -59,4 +40,30 @@ export class FileUploadController {
   ) {
     return this.fileUploadService.uploadImage(file, uuid);
   }
+
+  @Post('uploadTempImage')
+@UseInterceptors(FileInterceptor('file'))
+async uploadTempImage(
+  @UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({
+          maxSize: 500 * 1024,
+          message: 'El tamaño de la imagen no debe exceder los 200 kb!',
+        }),
+        new FileTypeValidator({
+          fileType: /(jpg|jpeg|png|webp)$/i,
+        }),
+      ],
+    }),
+  )
+  file: Express.Multer.File,
+) {
+  const imageUrl = await this.fileUploadService.uploadTempImage(file);
+  return {
+    statusCode: 201,
+    message: 'Imagen subida exitosamente',
+    imageUrl,
+  };
+}
 }
