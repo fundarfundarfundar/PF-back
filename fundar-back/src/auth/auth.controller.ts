@@ -66,7 +66,7 @@ async googleAuthRedirect(@Req() req, @Res() res) {
   const token = await this.authService.generateJwtToken(user);
 
   return res.redirect(
-      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
+      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&role=${encodeURIComponent(user.role ?? 'user')}`
     );
 
     //  if (req.query.redirect === 'true') {
