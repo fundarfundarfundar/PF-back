@@ -9,20 +9,21 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
-       TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'Fran290988fss.',
-      database: 'fundar_db',     
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,          
-    }),
-     JwtModule.register({
+      synchronize: true,
+  }),
+    JwtModule.register({
       global: true,
       secret: 'laclavesecreta',
       signOptions: { expiresIn: '60m' },
@@ -33,6 +34,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     FileUploadModule,
     AuthModule,
     CategoriesModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,40 +13,20 @@ import {
 import { FileUploadService } from './file-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 // import { AuthGuard } from 'src/auth/guards/auth.guard';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
 
-@ApiTags('Subir Imagen - Endpoints')
 @Controller('files')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Agrega una imagen del proyecto buscandolo por su UUID',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Imágen agregada',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'No autorizado',
-  })
-  @Post('uploadImage/:id')
+  @Post('uploadImage')
   @UseInterceptors(FileInterceptor('file'))
   // @UseGuards(AuthGuard)
-  async uploadProduct(
-    @Param('id') userId: string,
+  async uploadImage(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 200 * 1024,
+            maxSize: 500 * 1024,
             message: 'El tamaño de la imagen no debe exceder los 200 kb!',
           }),
           new FileTypeValidator({
@@ -56,8 +36,34 @@ export class FileUploadController {
       }),
     )
     file: Express.Multer.File,
-    @Body('productId') productId: string,
+    @Body('uuid') uuid: string,
   ) {
-    return this.fileUploadService.uploadProductImage(file, productId, userId);
+    return this.fileUploadService.uploadImage(file, uuid);
   }
+
+  @Post('uploadTempImage')
+@UseInterceptors(FileInterceptor('file'))
+async uploadTempImage(
+  @UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({
+          maxSize: 500 * 1024,
+          message: 'El tamaño de la imagen no debe exceder los 200 kb!',
+        }),
+        new FileTypeValidator({
+          fileType: /(jpg|jpeg|png|webp)$/i,
+        }),
+      ],
+    }),
+  )
+  file: Express.Multer.File,
+) {
+  const imageUrl = await this.fileUploadService.uploadTempImage(file);
+  return {
+    statusCode: 201,
+    message: 'Imagen subida exitosamente',
+    imageUrl,
+  };
+}
 }

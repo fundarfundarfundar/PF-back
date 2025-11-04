@@ -9,30 +9,37 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Column({ nullable: true })
+  password?: string;
 
-  @Column()
-  city: string;
+  @Column({ nullable: true })
+  city?: string;
 
-  @Column()
-  country: string;
+  @Column({ nullable: true })
+  country?: string;
 
-  @Column()
-  phone: string;
+  @Column({ nullable: true })
+  phone?: string;
 
-  @Column()
-  birthDate: Date;
+  @Column({ nullable: true })
+  birthDate?: Date;
 
-  @Column()
-  address: string;
+  @Column({ nullable: true })
+  address?: string;
 
-  @Column()
-  role: 'admin' | 'user';
+  @Column({ nullable: true })
+  imageUrl?: string;
 
-  @OneToMany(() => Donation, donation => donation.user)
+  @Column({ default: 'user', nullable: true })
+  role?: 'admin' | 'user';
+
+  //para auth con google
+  @Column({ nullable: true })
+  provider?: string;
+
+  @OneToMany(() => Donation, (donation) => donation.user)
   donations?: Donation[];
 }

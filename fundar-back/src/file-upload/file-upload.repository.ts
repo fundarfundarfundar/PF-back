@@ -22,4 +22,24 @@ export class FileUploadRepository {
       toStream(file.buffer).pipe(upload); // Convierto el buffer del archivo en un stream usando toStream(file.buffer)
     });
   }
+
+ async saveTempImage(file: Express.Multer.File): Promise<{ secure_url: string }> {
+  return new Promise((resolve, reject) => {
+    const upload = Cloudinary.uploader.upload_stream(
+      {
+        resource_type: 'auto',
+        folder: 'temp', // Guarda en la carpeta 'temp'
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({ secure_url: result!.secure_url });
+        }
+      },
+    );
+    toStream(file.buffer).pipe(upload);
+  });
+}
+
 }

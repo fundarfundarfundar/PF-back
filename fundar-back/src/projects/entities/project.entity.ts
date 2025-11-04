@@ -17,19 +17,34 @@ export class Project {
   @Column()
   title: string;
 
-  @Column()
+  @Column({  length: 180 })
+  resume: string;
+
+  @Column({ length: 600 })
   description: string;
 
   @Column()
-  date: Date;
+  country: string;
 
-  @Column()
-  imageUrl: string;
+  @Column({ type: 'float', default: 0 })
+  goalAmount: number;
 
-  @Column()
+  @Column({nullable: true, type: 'float', default: 0 })
+  currentAmount: number;
+
+  @Column('text', { array: true, default: [] })
+  imageUrls: string[];
+
+  @Column({nullable: true, default: 'active' })
   status: 'active' | 'inactive';
 
-  @OneToMany(() => Donation, donation => donation.project)
+  @Column({ nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ name: 'category_id', nullable: true  })
+  categoryId?: string;
+
+  @OneToMany(() => Donation, (donation) => donation.project)
   donations: Donation[];
 
   @ManyToOne(() => Category, (category) => category.projects, {
