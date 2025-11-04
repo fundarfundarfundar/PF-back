@@ -11,9 +11,14 @@ export class ProjectsService {
     return this.projectsRepository.createProject(createProjectDto);
   }
 
+  //sin paginado
   getProjects() {
-    return this.projectsRepository.getProjects();
-  }
+  return this.projectsRepository.getProjects();
+}
+
+  // getProjects(page: number = 1, limit: number = 5) {
+  //   return this.projectsRepository.getProjectsPaginated(page, limit);
+  // }
 
   getProjectById(id: string) {
     return this.projectsRepository.getProjectById(id);
@@ -26,6 +31,10 @@ export class ProjectsService {
   filterByCategory(categoryId: string) {
     return this.projectsRepository.filterProjectsByCategory(categoryId);
   }
+
+  // filterByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
+  // return this.projectsRepository.filterProjectsByCategoryPaginated(categoryId, page, limit);
+  // }
 
   removeProject(id: string) {
     return this.projectsRepository.deleteProject(id);

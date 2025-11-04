@@ -66,6 +66,42 @@ export class ProjectsRepository {
     });
   }
 
+  // projects.repository.ts
+// async filterProjectsByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
+//   const skip = (page - 1) * limit;
+//   const [projects, total] = await this.projectsRepository.findAndCount({
+//     where: { categoryId },
+//     skip,
+//     take: limit,
+//     order: { createdAt: "DESC" },
+//   });
+
+//   return {
+//     projects,
+//     total,
+//     page,
+//     totalPages: Math.ceil(total / limit),
+//   };
+// }
+
+// este es el nuevo ultimo
+// async getProjectsPaginated(page: number = 1, limit: number = 5) {
+//     const skip = (page - 1) * limit;
+//     const [projects, total] = await this.projectsRepository.findAndCount({
+//       skip,
+//       take: limit,
+//       order: { createdAt: "DESC" },
+//     });
+
+//     return {
+//       projects,
+//       total,
+//       page,
+//       totalPages: Math.ceil(total / limit),
+//     };
+//   }
+
+
   async deleteProject(id: string) {
     return this.projectsRepository.delete(id);
   }
