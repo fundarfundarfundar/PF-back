@@ -5,7 +5,6 @@ Usuario
 
 id (PK)
 nombre
-apellido
 email
 contraseña
 ciudad
@@ -53,3 +52,9 @@ Un usuario puede tener muchas donaciones.
 Una donación pertenece a un usuario y a una obra.
 Una obra puede tener muchos archivos.
 Una obra pertenece a una categoría.
+
+<img width="1072" height="642" alt="diagramaDER" src="https://github.com/user-attachments/assets/80a480c4-68fd-49bf-9917-6ff75e400e53" />
+
+
+
+
