@@ -50,9 +50,16 @@ export class AuthService {
       id: userFound.id,
       email: userFound.email,
       role: userFound.role,
+      firstName: userFound.firstName,
+      lastName: userFound.lastName,
+      imageUrl: userFound.imageUrl,
     };
 
-    const token = this.jwtService.sign(userPayload);
+    const token = this.jwtService.sign({
+      id: userFound.id,
+      email: userFound.email,
+      role: userFound.role,
+    });
 
     return {
       statusCode: 200,
@@ -60,15 +67,10 @@ export class AuthService {
       result: {
         access_token: token,
         user: userPayload,
-        name: userFound.name,
       },
     };
   }
 
-  /**
-   * - Error 409 si el email ya está registrado.
-   * - Error 500 si falla el hash de contraseña.
-   */
   async signUp(user: CreateUserDto) {
     const userFound = await this.usersRepository.findByEmail(user.email);
 
@@ -110,12 +112,13 @@ export class AuthService {
   }
 
   // En src/auth/auth.service.ts
-async findOrCreateGoogleUser(email: string, name: string): Promise<User> {
+async findOrCreateGoogleUser(email: string, firstName: string, lastName: string): Promise<User> {
    let user = await this.usersRepository.findByEmail(email);
   if (!user) {
     user = await this.usersRepository.addOne({
       email,
-      name,
+      firstName,
+      lastName,
       provider: 'google',
     });
   }

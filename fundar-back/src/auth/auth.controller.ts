@@ -23,8 +23,9 @@ export class AuthController {
   async signIn(@Body() credentials: LoginUserDto) {
     try {
       const { email, password } = credentials;
-      return await this.authService.signIn(email, password);
-    } catch (error) {
+      const result = await this.authService.signIn(email, password);
+      return result;
+      } catch (error) {
       if (
         error instanceof UnauthorizedException ||
         error instanceof InternalServerErrorException ||
@@ -59,36 +60,17 @@ async googleAuthRedirect(@Req() req, @Res() res) {
 
   const profile = req.user;
   const email = profile.emails[0].value;
-  const name = profile.displayName;
+  const displayName = profile.displayName;
+  const [firstName, ...lastNameParts] = displayName.split(' ');
+  const lastName = lastNameParts.join(' ');
 
-  const user = await this.authService.findOrCreateGoogleUser(email, name);
+  const user = await this.authService.findOrCreateGoogleUser(email, firstName, lastName);
 
   const token = await this.authService.generateJwtToken(user);
 
-  return res.redirect(
-      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&role=${encodeURIComponent(user.role ?? 'user')}`
-    );
-
-    //  if (req.query.redirect === 'true') {
-    //    return res.redirect(
-    //      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`
-    //    );
-    //  }
-
-    // Responde igual que /auth/signin
-    //  return res.json({
-    //    statusCode: 200,
-    //    message: 'Login successful',
-    //    result: {
-    //      access_token: token,
-    //      user: {
-    //        id: user.id,
-    //        email: user.email,
-    //        role: user.role,
-    //        name: user.name,
-    //      },
-    //    },
-    //  });
+ return res.redirect(
+  `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
+);
 
 }
 }
