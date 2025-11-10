@@ -14,10 +14,14 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { EmailService } from 'src/email/email.service'; // importa el servicio
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService
+  ) {}
 
   @Post('signin')
   async signIn(@Body() credentials: LoginUserDto) {
@@ -39,7 +43,17 @@ export class AuthController {
   @Post('signup')
   async signUp(@Body() createUser: CreateUserDto) {
     try {
-      return await this.authService.signUp(createUser);
+     const user = await this.authService.signUp(createUser);
+
+      console.log('Enviando email a:', user.user.email);
+     
+      await this.emailService.sendMail(
+        user.user.email,
+        'Welcome to Fundar.',
+        `Hello ${user.user.firstName} ${user.user.lastName}, thank you for registering!`
+      );
+
+      return user;
     } catch (error) {
       if (
         error instanceof InternalServerErrorException ||
