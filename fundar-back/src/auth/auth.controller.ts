@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { EmailService } from 'src/email/email.service'; // importa el servicio
+import { EmailService } from 'src/email/email.service'; 
 
 @Controller('auth')
 export class AuthController {
@@ -68,9 +68,9 @@ export class AuthController {
     @UseGuards(AuthGuard('google'))
     async googleAuth() {}
 
- @Get('google/callback')
-@UseGuards(AuthGuard('google'))
-async googleAuthRedirect(@Req() req, @Res() res) {
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req, @Res() res) {
 
   const profile = req.user;
   const email = profile.emails[0].value;

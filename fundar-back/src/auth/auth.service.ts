@@ -17,9 +17,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  /**
-   * - Error 401 si el email no existe o la contraseña es incorrecta.
-   */
   async signIn(email: string, password: string) {
     const userFound = await this.usersRepository.findByEmail(email);
 
@@ -32,7 +29,7 @@ export class AuthService {
     }
 
     if (!userFound.password) {
-      // El usuario no tiene contraseña (probablemente registrado con Google)
+  
       throw new UnauthorizedException('This user must sign in with Google');
     }
 
@@ -111,7 +108,6 @@ export class AuthService {
     };
   }
 
-  // En src/auth/auth.service.ts
 async findOrCreateGoogleUser(email: string, firstName: string, lastName: string): Promise<User> {
    let user = await this.usersRepository.findByEmail(email);
   if (!user) {

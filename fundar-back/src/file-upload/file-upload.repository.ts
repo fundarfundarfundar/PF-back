@@ -7,7 +7,6 @@ export class FileUploadRepository {
   async uploadImage(file: Express.Multer.File): Promise<UploadApiResponse> {
     return new Promise((resolve, reject) => {
       const upload = Cloudinary.uploader.upload_stream(
-        // Subo la imagen al cloud
         {
           resource_type: 'auto',
         },
@@ -19,7 +18,7 @@ export class FileUploadRepository {
           }
         },
       );
-      toStream(file.buffer).pipe(upload); // Convierto el buffer del archivo en un stream usando toStream(file.buffer)
+      toStream(file.buffer).pipe(upload); 
     });
   }
 
@@ -28,7 +27,7 @@ export class FileUploadRepository {
     const upload = Cloudinary.uploader.upload_stream(
       {
         resource_type: 'auto',
-        folder: 'temp', // Guarda en la carpeta 'temp'
+        folder: 'temp', 
       },
       (error, result) => {
         if (error) {

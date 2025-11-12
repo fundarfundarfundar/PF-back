@@ -12,21 +12,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoriesRepository {
-  private categories = [
-    {
-      id: '1',
-      name: 'Category 1',
-    },
-    {
-      id: '2',
-      name: 'Category 2',
-    },
-    {
-      id: '3',
-      name: 'Category 3',
-    },
-  ];
-
+  
   constructor(
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
