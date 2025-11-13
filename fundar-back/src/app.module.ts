@@ -10,6 +10,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentsModule } from './payments/payments.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { PaymentsModule } from './payments/payments.module';
       secret: 'laclavesecreta',
       signOptions: { expiresIn: '60m' },
     }),
+     ScheduleModule.forRoot(),
     UsersModule,
     ProjectsModule,
     DonationsModule,
@@ -35,6 +38,7 @@ import { PaymentsModule } from './payments/payments.module';
     AuthModule,
     CategoriesModule,
     PaymentsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
