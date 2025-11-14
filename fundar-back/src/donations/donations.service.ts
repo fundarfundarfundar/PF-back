@@ -20,40 +20,65 @@ export class DonationsService {
     private readonly projectRepository: Repository<Project>
   ) {}
 
-async createDonation(createDonationDto: CreateDonationDto) {
-  const user = await this.userRepository.findOne({ where: { id: createDonationDto.userId } });
+  async createDonation(createDonationDto: CreateDonationDto) {
+    const user = await this.userRepository.findOne({ where: { id: createDonationDto.userId } });
+    if (!user) throw new Error('User does not exist');
 
-   if (!user) {
-    throw new Error('User does not exist');
-  }
-  
     let project: Project | undefined = undefined;
     if (createDonationDto.projectId) {
       const foundProject = await this.projectRepository.findOne({ where: { id: createDonationDto.projectId } });
-      if (!foundProject) {
-      throw new Error('Project does not exist');
-  }
-  project = foundProject;
+      if (!foundProject) throw new Error('Project does not exist');
+      project = foundProject;
     }
 
- const { userId, projectId, ...rest } = createDonationDto;
+    // Verifica si el proyecto ya alcanzó el tope
+    if (
+      project &&
+      typeof project.currentAmount === 'number' &&
+      typeof project.goalAmount === 'number' &&
+      project.currentAmount + createDonationDto.amount > project.goalAmount
+    ) {
+      throw new Error('Project goal reached, no more donations allowed');
+    }
 
-const donationData: Partial<Donation>= {
-  ...rest,
-  user,
-  project,
-};
- 
-  const donation = await this.donationsRepository.createDonation(donationData);
+    const { userId, projectId, ...rest } = createDonationDto;
+    const donationData: Partial<Donation> = {
+      ...rest,
+      user,
+      project,
+    };
 
-  if (user?.email) {
-  const fullName = `${user.firstName} ${user.lastName}`;
-  const projectName = project ? project.title : 'General Fund';
-  const formattedDate = new Date(donation.date).toLocaleDateString('en-US');
-  await this.emailService.sendMail(
-    user.email,
-    'Thank you for your donation!',
-    `Dear ${fullName},
+    const donation = await this.donationsRepository.createDonation(donationData);
+
+    // Suma el monto de la donación al proyecto
+   if (project) {
+      project.currentAmount += donation.amount;
+
+      if (project.currentAmount >= project.goalAmount && project.status !== 'completed') {
+        project.status = 'completed';
+        await this.projectRepository.save(project);
+
+        // Enviar email al admin
+        const adminEmail = 'fundarfundarfundar@gmail.com';
+        await this.emailService.sendMail(
+          adminEmail,
+          'Project Completed!',
+          `The project "${project.title}" has reached its goal of $${project.goalAmount} and is now completed.`
+        );
+      } else {
+        await this.projectRepository.save(project);
+      }
+    }
+
+    // Email al usuario
+    if (user?.email) {
+      const fullName = `${user.firstName} ${user.lastName}`;
+      const projectName = project ? project.title : 'General Fund';
+      const formattedDate = new Date(donation.date).toLocaleDateString('en-US');
+      await this.emailService.sendMail(
+        user.email,
+        'Thank you for your donation!',
+        `Dear ${fullName},
 
 Thank you for your generous donation!
 
@@ -70,24 +95,25 @@ If you have any questions, feel free to contact us.
 
 Best regards,
 The Fundar Team`
-  );
-}
+      );
+    }
 
-  const adminEmail = 'fundarfundarfundar@gmail.com';
-  await this.emailService.sendMail(
-    adminEmail,
-    'New Donation Received',
-    `A new donation has been made:\n
-    Donor: ${user.firstName} ${user.lastName} (${user.email})
-    Amount: $${donation.amount}
-    Project: ${project ? project.title : 'General Fund'}
-    Date: ${donation.date}
-    `
-  );
+    // Email al admin
+    const adminEmail = 'fundarfundarfundar@gmail.com';
+    await this.emailService.sendMail(
+      adminEmail,
+      'New Donation Received',
+      `A new donation has been made:\n
+Donor: ${user.firstName} ${user.lastName} (${user.email})
+Amount: $${donation.amount}
+Project: ${project ? project.title : 'General Fund'}
+Date: ${donation.date}
+`
+    );
 
-  return donation;
-}
-  
+    return donation;
+  }
+
   GetDonations() {
     return this.donationsRepository.getDonations();
   }

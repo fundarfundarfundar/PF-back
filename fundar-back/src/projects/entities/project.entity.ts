@@ -36,7 +36,7 @@ export class Project {
   imageUrls: string[];
 
   @Column({nullable: true, default: 'active' })
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'completed';
 
   @Column({ nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
