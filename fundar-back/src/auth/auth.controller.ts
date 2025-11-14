@@ -44,8 +44,6 @@ export class AuthController {
   async signUp(@Body() createUser: CreateUserDto) {
     try {
      const user = await this.authService.signUp(createUser);
-
-      console.log('Enviando email a:', user.user.email);
      
       await this.emailService.sendMail(
         user.user.email,

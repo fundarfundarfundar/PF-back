@@ -43,11 +43,7 @@ const donationData: Partial<Donation>= {
   user,
   project,
 };
-  console.log('Body userId:', createDonationDto.userId);
-  console.log('Body projectId:', createDonationDto.projectId);
-  console.log('User:', user);
-  console.log('Project:', project);
-
+ 
   const donation = await this.donationsRepository.createDonation(donationData);
 
   if (user?.email) {
@@ -77,10 +73,21 @@ The Fundar Team`
   );
 }
 
+  const adminEmail = 'fundarfundarfundar@gmail.com';
+  await this.emailService.sendMail(
+    adminEmail,
+    'New Donation Received',
+    `A new donation has been made:\n
+    Donor: ${user.firstName} ${user.lastName} (${user.email})
+    Amount: $${donation.amount}
+    Project: ${project ? project.title : 'General Fund'}
+    Date: ${donation.date}
+    `
+  );
+
   return donation;
 }
   
-
   GetDonations() {
     return this.donationsRepository.getDonations();
   }
