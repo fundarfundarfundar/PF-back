@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class EmailService {
@@ -18,7 +20,7 @@ export class EmailService {
   async sendMail(to: string, subject: string, text: string) {
     try {
       const info = await this.transporter.sendMail({
-        from: 'fundarfundarfundar@gmail.com', 
+        from: process.env.ADMIN_EMAIL, 
         to,
         subject,
         text,

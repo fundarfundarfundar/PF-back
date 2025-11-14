@@ -8,6 +8,8 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Project } from 'src/projects/entities/project.entity';
 import { Donation } from './entities/donation.entity';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class DonationsService {
@@ -59,7 +61,7 @@ export class DonationsService {
         await this.projectRepository.save(project);
 
         // Enviar email al admin
-        const adminEmail = 'fundarfundarfundar@gmail.com';
+        const adminEmail =  process.env.ADMIN_EMAIL || '';
         await this.emailService.sendMail(
           adminEmail,
           'Project Completed!',
@@ -99,7 +101,7 @@ The Fundar Team`
     }
 
     // Email al admin
-    const adminEmail = 'fundarfundarfundar@gmail.com';
+    const adminEmail = process.env.ADMIN_EMAIL || '';
     await this.emailService.sendMail(
       adminEmail,
       'New Donation Received',

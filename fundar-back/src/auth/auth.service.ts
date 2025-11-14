@@ -90,7 +90,7 @@ export class AuthService {
       });
     }
 
-    const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(',') ?? [];
+    const ADMIN_EMAILS = process.env.ADMIN_NUEVOS_EMAILS_POSIBLES?.split(',') ?? [];
     
     const role = ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user';
 
