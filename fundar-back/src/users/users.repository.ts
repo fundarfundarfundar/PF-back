@@ -10,11 +10,14 @@ export class UsersRepository {
   ) {}
 
   async getUsers() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: ['donations'] });
   }
 
   async getUserById(id: string) {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOne({ 
+      relations: ['donations'],
+      where: { id },
+    });
   }
 
   async findByEmail(email: string): Promise<User | null> {
