@@ -39,7 +39,6 @@ export class User {
   @Column({ default: 'user', nullable: true })
   role?: 'admin' | 'user';
 
-  //para auth con google
   @Column({ nullable: true })
   provider?: string;
 

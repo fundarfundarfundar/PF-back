@@ -141,7 +141,6 @@ export class UsersController {
     return await this.usersService.update(id, updateUser);
   }
 
-  //para cambiar el role desde admin
   @Put(':id/role')
   @ApiOperation({ summary: 'Update user role by ID (admin only)' })
   @ApiParam({ name: 'id', type: 'string', description: 'User UUID' })

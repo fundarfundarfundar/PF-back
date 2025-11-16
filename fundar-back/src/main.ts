@@ -11,13 +11,14 @@ async function bootstrap() {
     .setTitle('Fundar API')
     .setDescription('API documentation for Fundar project')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   app.enableCors({
-    origin: 'http://localhost:3000', // URL de frontend
-    credentials: true, // Para enviar cookies/autenticación
+    origin: 'http://localhost:3000', 
+    credentials: true, 
   });
   
   await app.listen(process.env.PORT ?? 3001);

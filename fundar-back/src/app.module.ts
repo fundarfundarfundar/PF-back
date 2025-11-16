@@ -27,7 +27,7 @@ import { NotificationsModule } from './notifications/notifications.module';
   }),
     JwtModule.register({
       global: true,
-      secret: 'laclavesecreta',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '60m' },
     }),
      ScheduleModule.forRoot(),
