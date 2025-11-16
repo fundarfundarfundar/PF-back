@@ -28,7 +28,8 @@ export class PaymentsController {
     description: 'Stripe Checkout session created',
     schema: {
       example: {
-        url: 'https://checkout.stripe.com/pay/cs_test_1234567890'
+        url: 'https://checkout.stripe.com/pay/cs_test_1234567890',
+        amount: 50
       }
     }
   })
@@ -41,6 +42,7 @@ export class PaymentsController {
       body.userId,
       body.projectId,
     );
-    return { url };
+    
+    return { url, amount: body.amount };
   }
 }
