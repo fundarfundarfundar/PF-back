@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -12,23 +12,27 @@ export class PaymentsRepository {
     userId: string,
     projectId: string,
   ): Promise<string> {
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: { name: 'Donación' },
-            unit_amount: amount * 100,
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: { name: 'Donación' },
+              unit_amount: amount * 100,
+            },
+            quantity: 1,
           },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/cancel',
-      metadata: { userId, projectId },
-    });
-    return session.url!;
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'http://localhost:3000/cancel',
+        metadata: { userId, projectId },
+      });
+      return session.url!;     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating Stripe session');
+    }
   }
 }

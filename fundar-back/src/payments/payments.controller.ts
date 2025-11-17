@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, InternalServerErrorException } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { ApiOperation, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -37,12 +37,16 @@ export class PaymentsController {
   async createSession(
     @Body() body: { amount: number; userId: string; projectId: string },
   ) {
-    const url = await this.paymentsService.createSession(
-      body.amount,
-      body.userId,
-      body.projectId,
-    );
-    
-    return { url, amount: body.amount };
+    try {
+      const url = await this.paymentsService.createSession(
+        body.amount,
+        body.userId,
+        body.projectId,
+      );
+      return { url, amount: body.amount };   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating payment session');
+
+    }
   }
 }
