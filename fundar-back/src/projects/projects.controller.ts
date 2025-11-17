@@ -7,6 +7,8 @@ import {
   Delete,
   Put,
   Query,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -26,7 +28,11 @@ export class ProjectsController {
     type: [Project],
   })
   async getProjects() {
-  return await this.projectsService.getProjects();
+    try {
+      return await this.projectsService.getProjects();      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching projects');
+    }
   }
 
   @Get('filter')
@@ -37,7 +43,11 @@ export class ProjectsController {
     type: [Project],
   })
   async filterProjects(@Query('category') category: string) {
-    return await this.projectsService.filterByCategory(category);
+    try {
+      return await this.projectsService.filterByCategory(category);   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error filtering projects');
+    }
   }
 
   @Get(':id')
@@ -48,7 +58,12 @@ export class ProjectsController {
     type: Project,
   })
   async getProjectById(@Param('id') id: string) {
-    return await this.projectsService.getProjectById(id);
+    try {
+      return await this.projectsService.getProjectById(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching project');
+    }
   }
 
   @Post()
@@ -74,7 +89,12 @@ export class ProjectsController {
     type: Project,
   })
   async create(@Body() createProjectDto: CreateProjectDto) {
-    return await this.projectsService.createProject(createProjectDto);
+    try {
+      return await this.projectsService.createProject(createProjectDto);     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating project');
+
+    }
   }
 
   @Put(':id')
@@ -104,7 +124,13 @@ export class ProjectsController {
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
   ) {
-    return await this.projectsService.updateProject(id, updateProjectDto);
+    try {
+      return await this.projectsService.updateProject(id, updateProjectDto);
+      
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating project');
+    }
   }
 
   @Delete(':id')
@@ -114,6 +140,11 @@ export class ProjectsController {
     description: 'Project deleted successfully',
   })
   async removeProject(@Param('id') id: string) {
-    return await this.projectsService.removeProject(id);
+    try {
+      return await this.projectsService.removeProject(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting project');
+    }
   }
 }
