@@ -7,35 +7,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectsRepository {
-  private projects = [
-    {
-      id: '1',
-      title: 'Proyecto 1',
-      description: 'Descripción 1',
-      date: new Date(),
-      categoryId: '1',
-      imageUrl: 'https://...',
-      statusIsCompleted: true,
-    },
-    {
-      id: '2',
-      title: 'Proyecto 2',
-      description: 'Descripción 2',
-      date: new Date(),
-      categoryId: '2',
-      imageUrl: 'https://...',
-      statusIsCompleted: false,
-    },
-    {
-      id: '3',
-      title: 'Proyecto 3',
-      description: 'Descripción 3',
-      date: new Date(),
-      imageUrl: 'https://...',
-      status: 'active',
-      categoryId: '3',
-    },
-  ];
 
   constructor(
     @InjectRepository(Project)
@@ -44,65 +15,29 @@ export class ProjectsRepository {
 
   async createProject(createProjectDto: CreateProjectDto) {
     const newProject = this.projectsRepository.create(createProjectDto);
-    return this.projectsRepository.save(newProject);
+    return await this.projectsRepository.save(newProject);
   }
 
   async getProjects() {
-    return this.projectsRepository.find();
+    return await this.projectsRepository.find();
   }
 
   async getProjectById(id: string) {
-    return this.projectsRepository.findOneBy({ id });
+    return await this.projectsRepository.findOneBy({ id });
   }
 
   async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
     await this.projectsRepository.update(id, updateProjectDto);
-    return this.projectsRepository.findOneBy({ id });
+    return await this.projectsRepository.findOneBy({ id });
   }
 
   async filterProjectsByCategory(categoryId: string) {
-    return this.projectsRepository.find({
+    return await this.projectsRepository.find({
       where: { categoryId },
     });
   }
 
-  // projects.repository.ts
-// async filterProjectsByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
-//   const skip = (page - 1) * limit;
-//   const [projects, total] = await this.projectsRepository.findAndCount({
-//     where: { categoryId },
-//     skip,
-//     take: limit,
-//     order: { createdAt: "DESC" },
-//   });
-
-//   return {
-//     projects,
-//     total,
-//     page,
-//     totalPages: Math.ceil(total / limit),
-//   };
-// }
-
-// este es el nuevo ultimo
-// async getProjectsPaginated(page: number = 1, limit: number = 5) {
-//     const skip = (page - 1) * limit;
-//     const [projects, total] = await this.projectsRepository.findAndCount({
-//       skip,
-//       take: limit,
-//       order: { createdAt: "DESC" },
-//     });
-
-//     return {
-//       projects,
-//       total,
-//       page,
-//       totalPages: Math.ceil(total / limit),
-//     };
-//   }
-
-
   async deleteProject(id: string) {
-    return this.projectsRepository.delete(id);
+    return await this.projectsRepository.delete(id);
   }
 }

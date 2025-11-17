@@ -19,7 +19,7 @@ export class DonationsRepository {
   }
   
   async getDonations() {
-    return this.donationsRepository.find();
+    return await this.donationsRepository.find();
   }
   async getDonationById(id: string) {
     return await this.donationsRepository.findOne({ where: { id } });

@@ -33,7 +33,6 @@ export class DonationsService {
       project = foundProject;
     }
 
-    // Verifica si el proyecto ya alcanzó el tope
     if (
       project &&
       typeof project.currentAmount === 'number' &&
@@ -52,7 +51,6 @@ export class DonationsService {
 
     const donation = await this.donationsRepository.createDonation(donationData);
 
-    // Suma el monto de la donación al proyecto
    if (project) {
       project.currentAmount += donation.amount;
 
@@ -60,7 +58,6 @@ export class DonationsService {
         project.status = 'completed';
         await this.projectRepository.save(project);
 
-        // Enviar email al admin
         const adminEmail =  process.env.ADMIN_EMAIL || '';
         await this.emailService.sendMail(
           adminEmail,
@@ -72,7 +69,6 @@ export class DonationsService {
       }
     }
 
-    // Email al usuario
     if (user?.email) {
       const fullName = `${user.firstName} ${user.lastName}`;
       const projectName = project ? project.title : 'General Fund';
@@ -82,53 +78,51 @@ export class DonationsService {
         'Thank you for your donation!',
         `Dear ${fullName},
 
-Thank you for your generous donation!
+         Thank you for your generous donation!
 
-Donation Details:
-- Donation ID: ${donation.id}
-- Amount: $${donation.amount}
-- Project: ${projectName}
-- Date: ${formattedDate}
-- Payment Method: ${donation.paymentMethod}
+         Donation Details:
+         - Donation ID: ${donation.id}
+         - Amount: $${donation.amount}
+         - Project: ${projectName}
+         - Date: ${formattedDate}
+         - Payment Method: ${donation.paymentMethod}
 
-Your support helps us continue our mission and make a real difference.
+         Your support helps us continue our mission and make a real difference.
 
-If you have any questions, feel free to contact us.
+         If you have any questions, feel free to contact us.
 
-Best regards,
-The Fundar Team`
+         Best regards,
+         The Fundar Team`
       );
     }
 
-    // Email al admin
     const adminEmail = process.env.ADMIN_EMAIL || '';
     await this.emailService.sendMail(
       adminEmail,
       'New Donation Received',
       `A new donation has been made:\n
-Donor: ${user.firstName} ${user.lastName} (${user.email})
-Amount: $${donation.amount}
-Project: ${project ? project.title : 'General Fund'}
-Date: ${donation.date}
-`
+       Donor: ${user.firstName} ${user.lastName} (${user.email})
+       Amount: $${donation.amount}
+       Project: ${project ? project.title : 'General Fund'}
+       Date: ${donation.date}`
     );
 
     return donation;
   }
 
-  GetDonations() {
-    return this.donationsRepository.getDonations();
+  async GetDonations() {
+    return await this.donationsRepository.getDonations();
   }
 
-  getDonationById(id: string) {
-    return this.donationsRepository.getDonationById(id);
+  async getDonationById(id: string) {
+    return await this.donationsRepository.getDonationById(id);
   }
 
-  updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
-    return this.donationsRepository.updateDonation(id, updateDonationDto);
+  async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
+    return await this.donationsRepository.updateDonation(id, updateDonationDto);
   }
 
-  deleteDonation(id: string) {
-    return this.donationsRepository.deleteDonation(id);
+  async deleteDonation(id: string) {
+    return await this.donationsRepository.deleteDonation(id);
   }
 }

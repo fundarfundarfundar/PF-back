@@ -36,38 +36,38 @@ export class DonationsController {
     }
   })
   @ApiResponse({ status: 201, description: 'Donation created successfully', type: Donation })
-  createDonation(@Body() createDonationDto: CreateDonationDto) {
-    return this.donationsService.createDonation(createDonationDto);
+  async createDonation(@Body() createDonationDto: CreateDonationDto) {
+    return await this.donationsService.createDonation(createDonationDto);
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'List all donations', type: [Donation] })
-  getDonations() {
-    return this.donationsService.GetDonations();
+  async getDonations() {
+    return await this.donationsService.GetDonations();
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiResponse({ status: 200, description: 'Get donation by ID', type: Donation })
-  getDonationById(@Param('id') id: string) {
-    return this.donationsService.getDonationById(id);
+  async getDonationById(@Param('id') id: string) {
+    return await this.donationsService.getDonationById(id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiBody({ type: UpdateDonationDto })
   @ApiResponse({ status: 200, description: 'Donation updated successfully', type: Donation })
-  updateDonation(
+  async updateDonation(
     @Param('id') id: string,
     @Body() updateDonationDto: UpdateDonationDto,
   ) {
-    return this.donationsService.updateDonation(id, updateDonationDto);
+    return await this.donationsService.updateDonation(id, updateDonationDto);
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiResponse({ status: 204, description: 'Donation deleted successfully' })
-  deleteDonation(@Param('id') id: string) {
-    return this.donationsService.deleteDonation(id);
+  async deleteDonation(@Param('id') id: string) {
+    return await this.donationsService.deleteDonation(id);
   }
 }

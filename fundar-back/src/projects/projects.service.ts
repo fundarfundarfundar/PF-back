@@ -7,36 +7,27 @@ import { ProjectsRepository } from './projects.repository';
 export class ProjectsService {
   constructor(private projectsRepository: ProjectsRepository) {}
 
-  createProject(createProjectDto: CreateProjectDto) {
-    return this.projectsRepository.createProject(createProjectDto);
+  async createProject(createProjectDto: CreateProjectDto) {
+    return await this.projectsRepository.createProject(createProjectDto);
   }
 
-  //sin paginado
-  getProjects() {
-  return this.projectsRepository.getProjects();
+  async getProjects() {
+  return await this.projectsRepository.getProjects();
 }
 
-  // getProjects(page: number = 1, limit: number = 5) {
-  //   return this.projectsRepository.getProjectsPaginated(page, limit);
-  // }
-
-  getProjectById(id: string) {
-    return this.projectsRepository.getProjectById(id);
+  async getProjectById(id: string) {
+    return await this.projectsRepository.getProjectById(id);
   }
 
-  updateProject(id: string, updateProjectDto: UpdateProjectDto) {
-    return this.projectsRepository.updateProject(id, updateProjectDto);
+  async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
+    return await this.projectsRepository.updateProject(id, updateProjectDto);
   }
   
-  filterByCategory(categoryId: string) {
-    return this.projectsRepository.filterProjectsByCategory(categoryId);
+  async filterByCategory(categoryId: string) {
+    return await this.projectsRepository.filterProjectsByCategory(categoryId);
   }
 
-  // filterByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
-  // return this.projectsRepository.filterProjectsByCategoryPaginated(categoryId, page, limit);
-  // }
-
-  removeProject(id: string) {
-    return this.projectsRepository.deleteProject(id);
+  async removeProject(id: string) {
+    return await this.projectsRepository.deleteProject(id);
   }
 }

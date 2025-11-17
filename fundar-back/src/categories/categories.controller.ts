@@ -32,38 +32,38 @@ export class CategoriesController {
     }
   })
   @ApiResponse({ status: 201, description: 'Category created successfully', type: Category })
-  createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoriesService.createCategory(createCategoryDto);
+  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+    return await this.categoriesService.createCategory(createCategoryDto);
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'List all categories', type: [Category] })
-  getCategories() {
-    return this.categoriesService.getCategories();
+  async getCategories() {
+    return await this.categoriesService.getCategories();
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiResponse({ status: 200, description: 'Get category by ID', type: Category })
-  GetCategoryById(@Param('id') id: string) {
-    return this.categoriesService.GetCategoryById(id);
+  async GetCategoryById(@Param('id') id: string) {
+    return await this.categoriesService.GetCategoryById(id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiBody({ type: UpdateCategoryDto })
   @ApiResponse({ status: 200, description: 'Category updated successfully', type: Category })
-  updateCategory(
+  async updateCategory(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoriesService.updateCategory(id, updateCategoryDto);
+    return await this.categoriesService.updateCategory(id, updateCategoryDto);
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiResponse({ status: 204, description: 'Category deleted successfully' })
-  deleteCategory(@Param('id') id: string) {
-    return this.categoriesService.deleteCategory(id);
+  async deleteCategory(@Param('id') id: string) {
+    return await this.categoriesService.deleteCategory(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -10,14 +10,22 @@ export class UsersRepository {
   ) {}
 
   async getUsers() {
-    return this.usersRepository.find({ relations: ['donations'] });
+    try {
+      return this.usersRepository.find({ relations: ['donations'] });  
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching users');
+    }
   }
 
   async getUserById(id: string) {
-    return this.usersRepository.findOne({ 
-      relations: ['donations'],
-      where: { id },
-    });
+    try {
+      return await this.usersRepository.findOne({ 
+        relations: ['donations'],
+        where: { id },
+      });   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching user');
+    }
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -27,6 +35,7 @@ export class UsersRepository {
       throw new NotFoundException('Error searching user by email');
     }
   }
+
   async addOne(user: Partial<User>): Promise<User> {
     try {
       const newUser = await this.usersRepository.save(user);
@@ -55,11 +64,18 @@ export class UsersRepository {
     }
   }
   async findById(id: string): Promise<User | null> {
-    return await this.usersRepository.findOne({ where: { id } });
-  }
+    try {
+      return await this.usersRepository.findOne({ where: { id } });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error finding user by ID');
+    }  }
 
   async save(user: User): Promise<User> {
-    return await this.usersRepository.save(user);
+   try {
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error saving user');
+    }
   }
 
   async delete(id: string): Promise<Partial<User>> {
@@ -70,7 +86,7 @@ export class UsersRepository {
         throw new NotFoundException('User not found');
       }
 
-      this.usersRepository.remove(user);
+      await this.usersRepository.remove(user);
 
       const { password, ...userWithoutPassword } = user;
 

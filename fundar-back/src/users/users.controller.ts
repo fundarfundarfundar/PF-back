@@ -6,6 +6,8 @@ import {
   Delete,
   Put,
   ParseUUIDPipe,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -56,8 +58,12 @@ export class UsersController {
   })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiResponse({ status: 404, description: 'Users not found' })
-  getUsers() {
-    return this.usersService.getUsers();
+  async getUsers() {
+    try{
+      return await this.usersService.getUsers();
+    }catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching users');
+    }
   }
 
   @Get(':id')
@@ -86,7 +92,14 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findOne(@Param('id') id: string) {
-    return await this.usersService.getUserById(id);
+    try {
+      const user = await this.usersService.getUserById(id);
+      if (!user) throw new NotFoundException('User not found');
+      return user;
+    } catch (error) {
+        if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching user');
+    }
   }
 
   @Put(':id')
@@ -138,7 +151,12 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUser: CreateUserDto,
   ) {
-    return await this.usersService.update(id, updateUser);
+    try {
+      return await this.usersService.update(id, updateUser);   
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating user');
+    }
   }
 
   @Put(':id/role')
@@ -184,7 +202,12 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body('role') role: 'admin' | 'user',
     ) {
-    return await this.usersService.updateRole(id, role);
+      try {
+        return await this.usersService.updateRole(id, role);    
+      } catch (error) {
+        if (error instanceof NotFoundException) throw error;
+        throw new InternalServerErrorException(error.message || 'Error updating user role');
+      }
     }
 
   @Delete(':id')
@@ -216,6 +239,14 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.usersService.remove(id);
+    try {
+
+      return await this.usersService.remove(id);  
+         
+    } catch (error) {
+
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting user');
+    }
   }
 }
