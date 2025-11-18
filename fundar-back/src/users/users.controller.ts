@@ -8,17 +8,26 @@ import {
   ParseUUIDPipe,
   InternalServerErrorException,
   NotFoundException,
+  UseGuards,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @Roles('admin')
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
   status: 200,
@@ -90,14 +99,18 @@ export class UsersController {
     },
   })
   @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string, @Req() req) {
     try {
+      if (req.user.role !== 'admin' && req.user.id !== id) {
+        throw new UnauthorizedException('You can only access your own profile');
+      }
       const user = await this.usersService.getUserById(id);
       if (!user) throw new NotFoundException('User not found');
       return user;
     } catch (error) {
-        if (error instanceof NotFoundException) throw error;
+      if (error instanceof NotFoundException || error instanceof UnauthorizedException) throw error;
       throw new InternalServerErrorException(error.message || 'Error fetching user');
     }
   }
@@ -146,20 +159,26 @@ export class UsersController {
     },
   })
   @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateUser: CreateUserDto,
-  ) {
-    try {
-      return await this.usersService.update(id, updateUser);   
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error updating user');
+ async update(
+  @Param('id', ParseUUIDPipe) id: string,
+  @Body() updateUser: CreateUserDto,
+  @Req() req,
+) {
+  try {
+    if (req.user.role !== 'admin' && req.user.id !== id) {
+      throw new UnauthorizedException('You can only update your own profile');
     }
+    return await this.usersService.update(id, updateUser);
+  } catch (error) {
+    if (error instanceof NotFoundException || error instanceof UnauthorizedException) throw error;
+    throw new InternalServerErrorException(error.message || 'Error updating user');
   }
+}
 
   @Put(':id/role')
+  @Roles('admin')
   @ApiOperation({ summary: 'Update user role by ID (admin only)' })
   @ApiParam({ name: 'id', type: 'string', description: 'User UUID' })
   @ApiBody({
@@ -211,6 +230,7 @@ export class UsersController {
     }
 
   @Delete(':id')
+  @Roles('admin')
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiParam({ name: 'id', type: 'string', description: 'User UUID' })
   @ApiResponse({
