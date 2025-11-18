@@ -19,15 +19,23 @@ export class DonationsRepository {
   }
   
   async getDonations() {
-    return await this.donationsRepository.find();
+    return await this.donationsRepository.find({
+      relations: ['project', 'user'], 
+    });
   }
+  
   async getDonationById(id: string) {
-    return await this.donationsRepository.findOne({ where: { id } });
+    return await this.donationsRepository.findOne({ 
+      where: { id },
+      relations: ['project', 'user'], // <-- También aquí si quieres el project en GET by ID
+    });
   }
+
   async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
     await this.donationsRepository.update(id, updateDonationDto);
     return await this.donationsRepository.findOne({ where: { id } });
   }
+
   async deleteDonation(id: string) {
     await this.donationsRepository.delete(id);
   }
