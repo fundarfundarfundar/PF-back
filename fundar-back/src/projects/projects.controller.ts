@@ -9,12 +9,16 @@ import {
   Query,
   InternalServerErrorException,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { Project } from './entities/project.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -66,7 +70,10 @@ export class ProjectsController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
+  @Roles('admin')
    @ApiBody({
     type: CreateProjectDto,
     examples: {
@@ -97,7 +104,10 @@ export class ProjectsController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Put(':id')
+  @Roles('admin')
   @ApiParam({ name: 'id', description: 'Project ID' })
   @ApiBody({
     type: UpdateProjectDto,
@@ -132,8 +142,10 @@ export class ProjectsController {
       throw new InternalServerErrorException(error.message || 'Error updating project');
     }
   }
-
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':id')
+  @Roles('admin')
   @ApiParam({ name: 'id', description: 'Project ID' })
   @ApiResponse({
     status: 204,

@@ -8,12 +8,16 @@ import {
   Put,
   InternalServerErrorException,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiTags, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { Category } from './entities/category.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -21,6 +25,9 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
   @ApiBody({
     description: 'Create a new category',
     type: CreateCategoryDto,
@@ -65,6 +72,9 @@ export class CategoriesController {
   }
 
   @Put(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiBody({ type: UpdateCategoryDto })
   @ApiResponse({ status: 200, description: 'Category updated successfully', type: Category })
@@ -81,6 +91,9 @@ export class CategoriesController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiResponse({ status: 204, description: 'Category deleted successfully' })
   async deleteCategory(@Param('id') id: string) {
