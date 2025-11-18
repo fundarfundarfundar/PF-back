@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  InternalServerErrorException,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -67,7 +68,11 @@ export class FileUploadController {
     file: Express.Multer.File,
     @Body('uuid') uuid: string,
   ) {
-    return this.fileUploadService.uploadImage(file, uuid);
+    try {
+      return this.fileUploadService.uploadImage(file, uuid);   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error uploading image');
+    }
   }
 
   @Post('uploadTempImage')
@@ -114,11 +119,16 @@ export class FileUploadController {
     )
     file: Express.Multer.File,
   ) {
-    const imageUrl = await this.fileUploadService.uploadTempImage(file);
-    return {
-      statusCode: 201,
-      message: 'Imagen subida exitosamente',
-      imageUrl,
-    };
+    try {
+      const imageUrl = await this.fileUploadService.uploadTempImage(file);
+      return {
+        statusCode: 201,
+        message: 'Imagen subida exitosamente',
+        imageUrl,
+      };
+      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error uploading temporary image');
+    }
   }
 }

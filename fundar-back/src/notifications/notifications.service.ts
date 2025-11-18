@@ -8,8 +8,10 @@ export class NotificationsService {
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async sendDailyNotifications() {
-    console.log('Daily notification cron executed');
+    try {
+      console.log('Daily notification cron executed');
+      
+    } catch (error) {
+      console.error('Error sending daily notifications:', error.message);    }
   }
-
-
 }

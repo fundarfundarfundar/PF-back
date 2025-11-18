@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Put,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { DonationsService } from './donations.service';
 import { CreateDonationDto } from './dto/create-donation.dto';
@@ -37,20 +39,33 @@ export class DonationsController {
   })
   @ApiResponse({ status: 201, description: 'Donation created successfully', type: Donation })
   async createDonation(@Body() createDonationDto: CreateDonationDto) {
-    return await this.donationsService.createDonation(createDonationDto);
+    try {
+      return await this.donationsService.createDonation(createDonationDto);     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating donation');
+    }
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'List all donations', type: [Donation] })
   async getDonations() {
-    return await this.donationsService.GetDonations();
+    try {
+      return await this.donationsService.GetDonations();   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching donations');
+    }
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiResponse({ status: 200, description: 'Get donation by ID', type: Donation })
   async getDonationById(@Param('id') id: string) {
-    return await this.donationsService.getDonationById(id);
+    try {
+      return await this.donationsService.getDonationById(id);    
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching donation');
+    }
   }
 
   @Put(':id')
@@ -61,13 +76,23 @@ export class DonationsController {
     @Param('id') id: string,
     @Body() updateDonationDto: UpdateDonationDto,
   ) {
-    return await this.donationsService.updateDonation(id, updateDonationDto);
+    try {
+      return await this.donationsService.updateDonation(id, updateDonationDto);    
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating donation');
+    }
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiResponse({ status: 204, description: 'Donation deleted successfully' })
   async deleteDonation(@Param('id') id: string) {
-    return await this.donationsService.deleteDonation(id);
+    try {
+      return await this.donationsService.deleteDonation(id);     
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting donation');
+    }
   }
 }

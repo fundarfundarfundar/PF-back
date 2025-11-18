@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
 import { DonationsRepository } from './donations.repository';
@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { Project } from 'src/projects/entities/project.entity';
 import { Donation } from './entities/donation.entity';
 import * as dotenv from 'dotenv';
+import { catchError } from 'rxjs';
 dotenv.config();
 
 @Injectable()
@@ -23,6 +24,8 @@ export class DonationsService {
   ) {}
 
   async createDonation(createDonationDto: CreateDonationDto) {
+    try{
+
     const user = await this.userRepository.findOne({ where: { id: createDonationDto.userId } });
     if (!user) throw new Error('User does not exist');
 
@@ -108,21 +111,41 @@ export class DonationsService {
     );
 
     return donation;
+  } catch (error) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error creating donation');
   }
+}
 
   async GetDonations() {
-    return await this.donationsRepository.getDonations();
+    try {
+      return await this.donationsRepository.getDonations();     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching donations');
+    }
   }
 
   async getDonationById(id: string) {
-    return await this.donationsRepository.getDonationById(id);
+    try {
+      return await this.donationsRepository.getDonationById(id);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching donation');
+    }
   }
 
   async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
-    return await this.donationsRepository.updateDonation(id, updateDonationDto);
+    try {
+      return await this.donationsRepository.updateDonation(id, updateDonationDto);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error updating donation');
+    }
   }
 
   async deleteDonation(id: string) {
-    return await this.donationsRepository.deleteDonation(id);
+    try {
+      return await this.donationsRepository.deleteDonation(id);     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error deleting donation');
+    }
   }
 }

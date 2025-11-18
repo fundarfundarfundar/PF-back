@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateDonationDto } from './dto/create-donation.dto';
 import { UpdateDonationDto } from './dto/update-donation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,29 +14,53 @@ export class DonationsRepository {
   ) {}
 
   async createDonation(donationData: Partial<Donation>) {
-    const newDonation = this.donationsRepository.create(donationData);
-    return await this.donationsRepository.save(newDonation);
+    try {
+      const newDonation = this.donationsRepository.create(donationData);
+      return await this.donationsRepository.save(newDonation);     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating donation');
+    }
   }
   
   async getDonations() {
-    return await this.donationsRepository.find({
-      relations: ['project', 'user'], 
-    });
+    try {
+      return await this.donationsRepository.find({
+        relations: ['project', 'user'], 
+      });    
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching donations');
+    }
   }
   
   async getDonationById(id: string) {
-    return await this.donationsRepository.findOne({ 
-      where: { id },
-      relations: ['project', 'user'], // <-- También aquí si quieres el project en GET by ID
-    });
+    try {
+      return await this.donationsRepository.findOne({ 
+        where: { id },
+        relations: ['project', 'user'], 
+      });    
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching donation');
+    }
   }
 
   async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
-    await this.donationsRepository.update(id, updateDonationDto);
-    return await this.donationsRepository.findOne({ where: { id } });
+    try {
+      await this.donationsRepository.update(id, updateDonationDto);
+      return await this.donationsRepository.findOne({ where: { id } });     
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating donation');
+    }
   }
 
   async deleteDonation(id: string) {
-    await this.donationsRepository.delete(id);
+    try {
+      await this.donationsRepository.delete(id); 
+      return { message: 'Donation deleted successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting donation');
+    }
   }
 }

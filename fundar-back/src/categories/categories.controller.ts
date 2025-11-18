@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Put,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -33,20 +35,33 @@ export class CategoriesController {
   })
   @ApiResponse({ status: 201, description: 'Category created successfully', type: Category })
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    return await this.categoriesService.createCategory(createCategoryDto);
+    try {
+      return await this.categoriesService.createCategory(createCategoryDto);    
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating category');
+    }
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'List all categories', type: [Category] })
   async getCategories() {
-    return await this.categoriesService.getCategories();
+    try {
+      return await this.categoriesService.getCategories();    
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching categories');
+    }
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiResponse({ status: 200, description: 'Get category by ID', type: Category })
   async GetCategoryById(@Param('id') id: string) {
-    return await this.categoriesService.GetCategoryById(id);
+    try {
+      return await this.categoriesService.GetCategoryById(id);     
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching category');
+    }
   }
 
   @Put(':id')
@@ -57,13 +72,23 @@ export class CategoriesController {
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return await this.categoriesService.updateCategory(id, updateCategoryDto);
+    try {
+      return await this.categoriesService.updateCategory(id, updateCategoryDto);      
+    } catch (error) {
+       if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating category');
+    }
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'Category ID (UUID)' })
   @ApiResponse({ status: 204, description: 'Category deleted successfully' })
   async deleteCategory(@Param('id') id: string) {
-    return await this.categoriesService.deleteCategory(id);
+    try {
+      return await this.categoriesService.deleteCategory(id);    
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting category');
+    }
   }
 }

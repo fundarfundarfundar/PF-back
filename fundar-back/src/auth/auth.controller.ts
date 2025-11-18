@@ -120,7 +120,13 @@ export class AuthController {
     description: 'Redirects to Google OAuth login page',
   })
   @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
+  async googleAuth() {
+     try {
+     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error with Google OAuth');
+    }
+  }
 
   @Get('google/callback')
   @ApiOperation({ summary: 'Google OAuth callback (redirects to frontend)' })
@@ -130,18 +136,22 @@ export class AuthController {
   })
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
-    const profile = req.user;
-    const email = profile.emails[0].value;
-    const displayName = profile.displayName;
-    const [firstName, ...lastNameParts] = displayName.split(' ');
-    const lastName = lastNameParts.join(' ');
-
-    const user = await this.authService.findOrCreateGoogleUser(email, firstName, lastName);
-
-    const token = await this.authService.generateJwtToken(user);
-
-    return res.redirect(
-      `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
-    );
+    try {
+      const profile = req.user;
+      const email = profile.emails[0].value;
+      const displayName = profile.displayName;
+      const [firstName, ...lastNameParts] = displayName.split(' ');
+      const lastName = lastNameParts.join(' ');
+  
+      const user = await this.authService.findOrCreateGoogleUser(email, firstName, lastName);
+  
+      const token = await this.authService.generateJwtToken(user);
+  
+      return res.redirect(
+        `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error in Google OAuth callback');
+    }
   }
 }
