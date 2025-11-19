@@ -79,20 +79,28 @@ export class UsersRepository {
   }
 
   async delete(id: string): Promise<Partial<User>> {
-    try {
-      const user = await this.usersRepository.findOneBy({ id });
+     try {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['donations'],
+    });
 
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-
-      await this.usersRepository.remove(user);
-
-      const { password, ...userWithoutPassword } = user;
-
-      return userWithoutPassword;
-    } catch (error) {
-      throw new NotFoundException('Error deleting user');
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
+
+    if (user.donations && user.donations.length > 0) {
+      await this.usersRepository.manager.delete('donation', { user: { id } });
+    }
+
+    await this.usersRepository.remove(user);
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    if (error instanceof NotFoundException) throw error;
+    throw new InternalServerErrorException(error.message || 'Error deleting user');
+  }
   }
 }
