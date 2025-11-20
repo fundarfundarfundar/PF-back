@@ -135,21 +135,19 @@ export class AuthController {
     description: 'Redirects to frontend with JWT and user info in query params',
   })
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req, @Res() res) {
+ async googleAuthRedirect(@Req() req, @Res() res) {
     try {
-      const profile = req.user;
-      const email = profile.emails[0].value;
-      const displayName = profile.displayName;
-      const [firstName, ...lastNameParts] = displayName.split(' ');
-      const lastName = lastNameParts.join(' ');
-  
-      const user = await this.authService.findOrCreateGoogleUser(email, firstName, lastName);
-  
-      const token = await this.authService.generateJwtToken(user);
-  
-     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const user = req.user;
 
-     return res.redirect(
+      const token = await this.authService.generateJwtToken(user);
+
+      const email = user.email;
+      const firstName = user.firstName;
+      const lastName = user.lastName;
+
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+      return res.redirect(
         `${frontendUrl}/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
       );
     } catch (error) {
