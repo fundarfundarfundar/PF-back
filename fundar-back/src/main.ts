@@ -17,7 +17,9 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors({
-    origin: 'https://demo2-umber-zeta.vercel.app', 
+    origin: ['https://demo2-five-phi.vercel.app/', 
+     'http://localhost:3000'
+    ],
     credentials: true, 
   });
   
