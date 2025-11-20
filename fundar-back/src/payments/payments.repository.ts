@@ -13,6 +13,7 @@ export class PaymentsRepository {
     projectId: string,
   ): Promise<string> {
     try {
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
       const session = await this.stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -26,8 +27,8 @@ export class PaymentsRepository {
           },
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'http://localhost:3000/cancel',
+        success_url: `${frontendUrl}/success`,
+        cancel_url: `${frontendUrl}/cancel`,
         metadata: { userId, projectId },
       });
       return session.url!;     
