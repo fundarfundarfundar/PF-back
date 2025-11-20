@@ -147,8 +147,10 @@ export class AuthController {
   
       const token = await this.authService.generateJwtToken(user);
   
-      return res.redirect(
-        `http://localhost:3000/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
+     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+     return res.redirect(
+  `   ${frontendUrl}/google-success?token=${token}&email=${encodeURIComponent(email)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&role=${encodeURIComponent(user.role ?? 'user')}`
       );
     } catch (error) {
       throw new InternalServerErrorException(error.message || 'Error in Google OAuth callback');
