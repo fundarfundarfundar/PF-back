@@ -103,6 +103,9 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async findOne(@Param('id') id: string, @Req() req) {
     try {
+      console.log('Usuario autenticado:', req.user); // Muestra el usuario autenticado (decodificado del token)
+      console.log('ID solicitado:', id); // Muestra el ID que se está solicitando
+
       if (req.user.role !== 'admin' && req.user.id !== id) {
         throw new UnauthorizedException('You can only access your own profile');
       }
