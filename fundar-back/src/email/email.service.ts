@@ -7,7 +7,7 @@ dotenv.config();
 export class EmailService {
   private transporter = nodemailer.createTransport({
     host: 'smtp.sendgrid.net',
-    port: 587,
+    port: 2525,
     auth: {
       user: 'apikey',
       pass: process.env.SENDGRID_API_KEY,
@@ -15,6 +15,8 @@ export class EmailService {
      tls: {
       rejectUnauthorized: false, 
     },
+    debug: true, // Habilita los logs detallados
+    logger: true, // Habilita el registro de eventos
   });
 
   async sendMail(to: string, subject: string, text: string) {
