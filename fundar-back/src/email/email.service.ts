@@ -15,8 +15,8 @@ export class EmailService {
      tls: {
       rejectUnauthorized: false, 
     },
-    debug: true, // Habilita los logs detallados
-    logger: true, // Habilita el registro de eventos
+    // debug: true, 
+    // logger: true, 
   });
 
   async sendMail(to: string, subject: string, text: string) {

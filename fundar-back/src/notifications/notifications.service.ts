@@ -40,19 +40,18 @@ export class NotificationsService {
       );
 
       const emailContent = `
-        <h1>Project Status Report</h1>
-        <h2>Completed Projects</h2>
-        <ul>
+            Project Status Report
+            Completed Projects
+        
           ${completedProjects
-            .map((project) => `<li>${project.name} (${project.progress})</li>`)
+            .map((project) => `${project.name} (${project.progress})`)
             .join('')}
-        </ul>
-        <h2>Projects Needing Attention</h2>
-        <ul>
+        
+          Projects Needing Attention
+        
           ${projectsNeedingAttention
-            .map((project) => `<li>${project.name} (${project.progress})</li>`)
+            .map((project) => `${project.name} (${project.progress})`)
             .join('')}
-        </ul>
       `;
 
       await this.emailService.sendMail(
