@@ -86,6 +86,40 @@ export class DonationsController {
     }
   }
 
+  @Get('user/:userId')
+    @ApiParam({ name: 'userId', description: 'User ID (UUID)' })
+    @ApiResponse({
+      status: 200,
+      description: 'List all donations made by a user',
+      schema: {
+        example: [
+          {
+            id: 'd1e7e6c2-1234-4cde-8a2b-123456789abc',
+            amount: 500,
+            date: '2025-11-01',
+            paymentMethod: 'credit_card',
+            project: {
+              id: 'c896fef0-e647-4273-8891-1a50e7fc57ed',
+              name: 'Project Name',
+            },
+          },
+        ],
+      },
+    })
+    async getDonationsByUser(@Param('userId') userId: string, @Req() req) {
+      try {
+
+        if (req.user.role !== 'admin' && req.user.id !== userId) {
+          throw new UnauthorizedException('You can only view your own donations');
+        }
+
+        return await this.donationsService.getDonationsByUser(userId);
+      } catch (error) {
+        if (error instanceof NotFoundException) throw error;
+        throw new InternalServerErrorException(error.message || 'Error fetching user donations');
+      }
+    }
+
   @Put(':id')
   @ApiParam({ name: 'id', description: 'Donation ID (UUID)' })
   @ApiBody({ type: UpdateDonationDto })

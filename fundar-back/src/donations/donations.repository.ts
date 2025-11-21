@@ -44,6 +44,17 @@ export class DonationsRepository {
     }
   }
 
+  async getDonationsByUser(userId: string) {
+    try {
+      return await this.donationsRepository.find({
+        where: { user: { id: userId } }, 
+        relations: ['project'], 
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching donations by user');
+    }
+  }
+
   async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
     try {
       await this.donationsRepository.update(id, updateDonationDto);

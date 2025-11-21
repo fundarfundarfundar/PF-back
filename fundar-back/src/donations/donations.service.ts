@@ -133,6 +133,14 @@ export class DonationsService {
     }
   }
 
+  async getDonationsByUser(userId: string) {
+    try {
+      return await this.donationsRepository.getDonationsByUser(userId);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching user donations');
+    }
+  }
+
   async updateDonation(id: string, updateDonationDto: UpdateDonationDto) {
     try {
       return await this.donationsRepository.updateDonation(id, updateDonationDto);      
