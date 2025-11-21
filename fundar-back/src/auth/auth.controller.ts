@@ -59,11 +59,7 @@ export class AuthController {
     try {
       const { email, password } = credentials;
       const result = await this.authService.signIn(email, password);
-      return {
-        statusCode: 200,
-        message: 'Login successful',
-        result,
-      }
+      return result;
     } catch (error) {
       if (
         error instanceof UnauthorizedException ||
