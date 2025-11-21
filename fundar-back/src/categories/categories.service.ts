@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoriesRepository } from './categories.repository';
@@ -7,23 +7,43 @@ import { CategoriesRepository } from './categories.repository';
 export class CategoriesService {
   constructor(private categoriesRepository: CategoriesRepository) {}
 
-  createCategory(createCategoryDto: CreateCategoryDto) {
-    return this.categoriesRepository.createCategory(createCategoryDto);
+  async createCategory(createCategoryDto: CreateCategoryDto) {
+    try {
+      return await this.categoriesRepository.createCategory(createCategoryDto);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating category'); 
+    }
   }
 
-  getCategories() {
-    return this.categoriesRepository.getCategories();
+  async getCategories() {
+    try {
+      return await this.categoriesRepository.getCategories();     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching categories');
+    }
   }
 
-  GetCategoryById(id: string) {
-    return this.categoriesRepository.getCategoryById(id);
+  async GetCategoryById(id: string) {
+    try {
+      return await this.categoriesRepository.getCategoryById(id);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching category');
+    }
   }
 
-  updateCategory(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesRepository.updateCategory(id, updateCategoryDto);
+  async updateCategory(id: string, updateCategoryDto: UpdateCategoryDto) {
+    try {
+      return await this.categoriesRepository.updateCategory(id, updateCategoryDto);   
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error updating category');
+    }
   }
 
-  deleteCategory(id: string) {
-    return this.categoriesRepository.deleteCategory(id);
+  async deleteCategory(id: string) {
+    try {
+      return await this.categoriesRepository.deleteCategory(id); 
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error deleting category');
+    }
   }
 }

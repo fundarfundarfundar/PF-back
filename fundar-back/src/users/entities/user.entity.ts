@@ -6,8 +6,11 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
+  @Column({ nullable: true })
+  firstName?: string;
+
+  @Column({ nullable: true })
+  lastName?: string;
 
   @Column({ nullable: true })
   email: string;
@@ -36,7 +39,6 @@ export class User {
   @Column({ default: 'user', nullable: true })
   role?: 'admin' | 'user';
 
-  //para auth con google
   @Column({ nullable: true })
   provider?: string;
 

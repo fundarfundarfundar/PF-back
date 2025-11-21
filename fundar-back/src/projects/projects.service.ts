@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectsRepository } from './projects.repository';
@@ -7,36 +7,51 @@ import { ProjectsRepository } from './projects.repository';
 export class ProjectsService {
   constructor(private projectsRepository: ProjectsRepository) {}
 
-  createProject(createProjectDto: CreateProjectDto) {
-    return this.projectsRepository.createProject(createProjectDto);
+  async createProject(createProjectDto: CreateProjectDto) {
+    try {
+      return await this.projectsRepository.createProject(createProjectDto);  
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating project');
+    }
   }
 
-  //sin paginado
-  getProjects() {
-  return this.projectsRepository.getProjects();
-}
-
-  // getProjects(page: number = 1, limit: number = 5) {
-  //   return this.projectsRepository.getProjectsPaginated(page, limit);
-  // }
-
-  getProjectById(id: string) {
-    return this.projectsRepository.getProjectById(id);
+  async getProjects() {
+    try {
+      return await this.projectsRepository.getProjects();
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching projects');
+    }
   }
 
-  updateProject(id: string, updateProjectDto: UpdateProjectDto) {
-    return this.projectsRepository.updateProject(id, updateProjectDto);
+  async getProjectById(id: string) {
+    try {
+      return await this.projectsRepository.getProjectById(id);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching project');
+    }
+  }
+
+  async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
+    try {
+      return await this.projectsRepository.updateProject(id, updateProjectDto);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error updating project');
+    }
   }
   
-  filterByCategory(categoryId: string) {
-    return this.projectsRepository.filterProjectsByCategory(categoryId);
+  async filterByCategory(categoryId: string) {
+    try {
+      return await this.projectsRepository.filterProjectsByCategory(categoryId);      
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error filtering projects');
+    }
   }
 
-  // filterByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
-  // return this.projectsRepository.filterProjectsByCategoryPaginated(categoryId, page, limit);
-  // }
-
-  removeProject(id: string) {
-    return this.projectsRepository.deleteProject(id);
+  async removeProject(id: string) {
+    try {
+      return await this.projectsRepository.deleteProject(id);     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error deleting project');
+    }
   }
 }

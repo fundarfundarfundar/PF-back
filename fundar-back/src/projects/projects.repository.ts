@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,35 +7,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProjectsRepository {
-  private projects = [
-    {
-      id: '1',
-      title: 'Proyecto 1',
-      description: 'Descripción 1',
-      date: new Date(),
-      categoryId: '1',
-      imageUrl: 'https://...',
-      statusIsCompleted: true,
-    },
-    {
-      id: '2',
-      title: 'Proyecto 2',
-      description: 'Descripción 2',
-      date: new Date(),
-      categoryId: '2',
-      imageUrl: 'https://...',
-      statusIsCompleted: false,
-    },
-    {
-      id: '3',
-      title: 'Proyecto 3',
-      description: 'Descripción 3',
-      date: new Date(),
-      imageUrl: 'https://...',
-      status: 'active',
-      categoryId: '3',
-    },
-  ];
 
   constructor(
     @InjectRepository(Project)
@@ -43,66 +14,57 @@ export class ProjectsRepository {
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto) {
-    const newProject = this.projectsRepository.create(createProjectDto);
-    return this.projectsRepository.save(newProject);
+    try {
+      const newProject = this.projectsRepository.create(createProjectDto);
+      return await this.projectsRepository.save(newProject);    
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error creating project');
+    }
   }
 
   async getProjects() {
-    return this.projectsRepository.find();
+    try {
+      return await this.projectsRepository.find();     
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error fetching projects');
+    }
   }
 
   async getProjectById(id: string) {
-    return this.projectsRepository.findOneBy({ id });
+    try {
+      return await this.projectsRepository.findOneBy({ id });
+    } catch (error) {
+       if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error fetching project');
+    }
   }
 
   async updateProject(id: string, updateProjectDto: UpdateProjectDto) {
-    await this.projectsRepository.update(id, updateProjectDto);
-    return this.projectsRepository.findOneBy({ id });
+    try {
+      await this.projectsRepository.update(id, updateProjectDto);
+      return await this.projectsRepository.findOneBy({ id });    
+    } catch (error) {
+       if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error updating project');
+    }
   }
 
   async filterProjectsByCategory(categoryId: string) {
-    return this.projectsRepository.find({
-      where: { categoryId },
-    });
+    try {
+      return await this.projectsRepository.find({
+        where: { categoryId },
+      });   
+    } catch (error) {
+        throw new InternalServerErrorException(error.message || 'Error filtering projects');
+    }
   }
 
-  // projects.repository.ts
-// async filterProjectsByCategoryPaginated(categoryId: string, page: number = 1, limit: number = 5) {
-//   const skip = (page - 1) * limit;
-//   const [projects, total] = await this.projectsRepository.findAndCount({
-//     where: { categoryId },
-//     skip,
-//     take: limit,
-//     order: { createdAt: "DESC" },
-//   });
-
-//   return {
-//     projects,
-//     total,
-//     page,
-//     totalPages: Math.ceil(total / limit),
-//   };
-// }
-
-// este es el nuevo ultimo
-// async getProjectsPaginated(page: number = 1, limit: number = 5) {
-//     const skip = (page - 1) * limit;
-//     const [projects, total] = await this.projectsRepository.findAndCount({
-//       skip,
-//       take: limit,
-//       order: { createdAt: "DESC" },
-//     });
-
-//     return {
-//       projects,
-//       total,
-//       page,
-//       totalPages: Math.ceil(total / limit),
-//     };
-//   }
-
-
   async deleteProject(id: string) {
-    return this.projectsRepository.delete(id);
+    try {
+      return await this.projectsRepository.delete(id);     
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException(error.message || 'Error deleting project');
+    }
   }
 }

@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UploadApiResponse, v2 as Cloudinary } from 'cloudinary';
 import toStream from 'buffer-to-stream';
 
 @Injectable()
 export class FileUploadRepository {
   async uploadImage(file: Express.Multer.File): Promise<UploadApiResponse> {
-    return new Promise((resolve, reject) => {
+    try{ 
+    return await new Promise((resolve, reject) => {
       const upload = Cloudinary.uploader.upload_stream(
-        // Subo la imagen al cloud
         {
           resource_type: 'auto',
         },
@@ -19,27 +19,35 @@ export class FileUploadRepository {
           }
         },
       );
-      toStream(file.buffer).pipe(upload); // Convierto el buffer del archivo en un stream usando toStream(file.buffer)
+      toStream(file.buffer).pipe(upload); 
     });
+  } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error uploading image');
+    }
   }
 
  async saveTempImage(file: Express.Multer.File): Promise<{ secure_url: string }> {
-  return new Promise((resolve, reject) => {
-    const upload = Cloudinary.uploader.upload_stream(
-      {
-        resource_type: 'auto',
-        folder: 'temp', // Guarda en la carpeta 'temp'
-      },
-      (error, result) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve({ secure_url: result!.secure_url });
-        }
-      },
-    );
-    toStream(file.buffer).pipe(upload);
-  });
+  try {
+    return await new Promise((resolve, reject) => {
+      const upload = Cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'auto',
+          folder: 'temp', 
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve({ secure_url: result!.secure_url });
+          }
+        },
+      );
+      toStream(file.buffer).pipe(upload);
+    });
+    
+  } catch (error) {
+    throw new InternalServerErrorException(error.message || 'Error uploading temporary image');
+  }
 }
 
 }

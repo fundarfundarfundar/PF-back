@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { FileUploadRepository } from './file-upload.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from 'src/projects/entities/project.entity';
@@ -16,6 +16,8 @@ export class FileUploadService {
   ) {}
 
  async uploadImage(file: Express.Multer.File, uuid: string) {
+  try {
+    
   const projectExists = await this.projectRepository.findOneBy({ id: uuid });
   const userExists = await this.userRepository.findOneBy({ id: uuid });
 
@@ -52,11 +54,19 @@ export class FileUploadService {
       user: updatedUser,
     };
   }
+    } catch (error) {
+      throw new InternalServerErrorException(error.message || 'Error uploading image');
+  }
 }
 
 async uploadTempImage(file: Express.Multer.File): Promise<string> {
-  const uploadedImage = await this.fileUploadRepository.saveTempImage(file);
-  return uploadedImage.secure_url;
+  try {
+    const uploadedImage = await this.fileUploadRepository.saveTempImage(file);
+    return uploadedImage.secure_url;
+    
+  } catch (error) {
+    throw new InternalServerErrorException(error.message || 'Error uploading temporary image');
+  }
 }
 
 }
