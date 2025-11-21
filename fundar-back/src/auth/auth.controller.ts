@@ -59,7 +59,11 @@ export class AuthController {
     try {
       const { email, password } = credentials;
       const result = await this.authService.signIn(email, password);
-      return result;
+      return {
+        statusCode: 200,
+        message: 'Login successful',
+        result,
+      }
     } catch (error) {
       if (
         error instanceof UnauthorizedException ||
@@ -102,7 +106,11 @@ export class AuthController {
         `Hello ${user.user.firstName} ${user.user.lastName}, thank you for registering!`
       );
 
-      return user;
+        return {
+        statusCode: 201,
+        message: 'User successfully registered',
+        user
+        }
     } catch (error) {
       if (
         error instanceof InternalServerErrorException ||
