@@ -10,7 +10,7 @@ export class NotificationsService {
     private readonly projectsService: ProjectsService,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_MINUTES) 
+  @Cron('0 */6 * * *')
   async sendProjectStatusNotifications() {
     try {
       console.log('Project status notification cron executed');
