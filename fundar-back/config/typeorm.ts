@@ -4,8 +4,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenvConfig({ path: '.env' });
 
-const isProduction = process.env.DB_SSL === 'true';
-
 const config = {
   type: 'postgres',
   // host: process.env.DB_HOST,
