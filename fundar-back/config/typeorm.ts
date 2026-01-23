@@ -4,7 +4,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenvConfig({ path: '.env' });
 
-const isProduction = process.env.NODE_ENV === 'production' || process.env.DB_SSL === 'true';
+const isProduction = process.env.DB_SSL === 'true';
 
 const config = {
   type: 'postgres',
