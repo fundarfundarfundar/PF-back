@@ -1,7 +1,7 @@
+/// <reference types="express" />
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UploadApiResponse, v2 as Cloudinary } from 'cloudinary';
 import toStream from 'buffer-to-stream';
-import type * as Express from 'express';
 
 @Injectable()
 export class FileUploadRepository {
