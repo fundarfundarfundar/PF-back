@@ -4,6 +4,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 dotenvConfig({ path: '.env' });
 
+const isProduction = process.env.NODE_ENV === 'production' || process.env.DB_SSL === 'true';
+
 const config = {
   type: 'postgres',
   host: process.env.DB_HOST,
@@ -16,9 +18,11 @@ const config = {
   autoLoadEntities: true,
   synchronize: true,
   // dropSchema:true,
-  ssl: {
-  rejectUnauthorized: false,
-}
+   ...(isProduction && {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  })
 };
 
 export default registerAs('typeorm', () => config);
