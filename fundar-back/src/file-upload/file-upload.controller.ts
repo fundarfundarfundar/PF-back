@@ -14,6 +14,7 @@ import { FileUploadService } from './file-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import type * as Express from 'express';
 
 @ApiTags('files')
 @ApiBearerAuth()
