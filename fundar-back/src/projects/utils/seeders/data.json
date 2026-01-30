@@ -57,5 +57,37 @@
         ],
          "status": "active",
         "category": "community dining room"
+      },
+      {
+        "title": "housing construction",
+        "resume": "housing construction in Paraguay",
+        "description": "The project is based on the construction of 4 houses for the Alto Paraguay area",
+        "country": "Paraguay",
+        "goalAmount": 9000,
+        "currentAmount": 800,
+        "imageUrls": ["https://res.cloudinary.com/dguogi7wq/image/upload/v1769806942/imgConstruccionViviendas4_guc8ll.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769806931/imgConstruccionViviendas3_rwjwjb.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769806888/imgConstruccionViviendas1_gyqzew.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769806918/imgConstruccionViviendas2_fk2ufp.png"
+        ],
+         "status": "active",
+        "category": "housing construction"
+      },
+      {
+        "title": "housing construction",
+        "resume": "housing construction in Mexico",
+        "description": "The project is based on the construction of 2 houses for the Guerrero area",
+        "country": "Mexico",
+        "goalAmount": 12000,
+        "currentAmount": 800,
+        "imageUrls": ["https://res.cloudinary.com/dguogi7wq/image/upload/v1769808330/imgContruccionViviendasMex_ufhaqd.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769808346/imgContruccionViviendasMex2_uvogpp.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769808359/imgContruccionViviendasMex3_oo4wz5.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769808375/imgContruccionViviendasMex4_xcteld.png"
+        ],
+         "status": "active",
+        "category": "housing construction"
       }
+
+
 ]
