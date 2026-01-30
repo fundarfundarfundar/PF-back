@@ -1,0 +1,61 @@
+[ 
+    {
+        "title": "school of Brazilian",
+        "resume": "help a rural school in Brazil",
+        "description": "A kitchen area will be built at the school for the school cafeteria.",
+        "country": "Brazil",
+        "goalAmount": 8000,
+        "currentAmount": 1200,
+        "imageUrls": [ "https://res.cloudinary.com/dguogi7wq/image/upload/v1769726517/imgEscuelaRural1_oy6h9q.png", 
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769726618/imgEscuelaRural2_birqks.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769726665/imgEscuelaRural3_om1w2c.png",
+      "https://res.cloudinary.com/dguogi7wq/image/upload/v1769726699/imgEscuelaRural4_wyazmj.png"],
+        "status": "active",
+        "category": "education"
+      },
+      {
+        "title": "hospital construction in Mexico",
+        "resume": "This project is based on the creation of a hospital in the Oaxaca area of ​​Mexico.",
+        "description": "A primary care hospital will be built in the Oaxaca region of Mexico. It will provide basic first-response services to the local population.",
+        "country": "Mexico",
+        "goalAmount": 10000,
+        "currentAmount": 1000,
+        "imageUrls": [ "https://res.cloudinary.com/dguogi7wq/image/upload/v1769798194/imgHospitalConstruccion3_es9m17.png", 
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769798174/imgHospitalConstruccion2_qukelv.png",
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769802623/imgHospitalConstruccion5_gmcw9w.png",
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769798215/imgHospitalConstruccion4_fbrvah.png"
+        ],
+         "status": "active",
+        "category": "health"
+      },
+      {
+        "title": "community dining hall in Colombia",
+        "resume": "construction of a community dining hall",
+        "description": "The project is based on the construction of a community dining hall in the La Guajira region of Colombia.",
+        "country": "Colombia",
+        "goalAmount": 6000,
+        "currentAmount": 500,
+        "imageUrls": [ "https://res.cloudinary.com/dguogi7wq/image/upload/v1769800041/imgComedor1_csbpsr.png", 
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769800056/imgComedor2_h67o35.png",
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769800069/imgComedor3_tqjlul.png",
+          "https://res.cloudinary.com/dguogi7wq/image/upload/v1769800086/imgComedor4_jbom87.png"
+        ],
+         "status": "active",
+        "category": "community dining room"
+      },
+      {
+        "title": "community dining hall in Argentina",
+        "resume": "construction of a community dining hall",
+        "description": "The project is based on the remodeling and restoration of a dining room in the Misiones area of ​​Argentina",
+        "country": "Argentina",
+        "goalAmount": 7000,
+        "currentAmount": 700,
+        "imageUrls": [ "https://res.cloudinary.com/dguogi7wq/image/upload/v1769804977/imgComedorArg3_gsjav6.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769804956/imgComedorArg2_jo3oc3.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769804940/imgComedorArg1_bmahei.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769804994/imgComedorArg4_nqtrq0.png"
+        ],
+         "status": "active",
+        "category": "community dining room"
+      }
+]

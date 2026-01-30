@@ -15,6 +15,10 @@ export class ProjectsService {
     }
   }
 
+  async addProjects() {
+    return await this.projectsRepository.addProjects();
+    }
+    
   async getProjects() {
     try {
       return await this.projectsRepository.getProjects();

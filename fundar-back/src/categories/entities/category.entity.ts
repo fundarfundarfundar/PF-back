@@ -9,7 +9,7 @@ export class Category {
   id: string;
 
   @ApiProperty({ example: 'Health', description: 'Name of the category' })
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true  })
   name: string;
 
   @ApiProperty({ type: () => [Project], required: false, description: 'Projects belonging to this category' })

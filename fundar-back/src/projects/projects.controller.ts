@@ -38,6 +38,11 @@ export class ProjectsController {
       throw new InternalServerErrorException(error.message || 'Error fetching projects');
     }
   }
+  
+  @Get('seeder')
+  async addProyects(){
+            return await this.projectsService.addProjects()
+  }
 
   @Get('filter')
   @ApiQuery({ name: 'category', required: true, description: 'Category to filter projects' })
@@ -143,9 +148,9 @@ export class ProjectsController {
     }
   }
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  // @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':id')
-  @Roles('admin')
+  // @Roles('admin')
   @ApiParam({ name: 'id', description: 'Project ID' })
   @ApiResponse({
     status: 204,

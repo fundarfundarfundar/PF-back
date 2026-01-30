@@ -4,6 +4,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
 import { Repository } from 'typeorm';
+import { Category } from 'src/categories/entities/category.entity';
+import * as data from './utils/seeders/data.json';
 
 @Injectable()
 export class ProjectsRepository {
@@ -11,6 +13,7 @@ export class ProjectsRepository {
   constructor(
     @InjectRepository(Project)
     private readonly projectsRepository: Repository<Project>,
+     @InjectRepository(Category) private categoriesRepository: Repository<Category>,
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto) {
@@ -20,6 +23,61 @@ export class ProjectsRepository {
     } catch (error) {
       throw new InternalServerErrorException(error.message || 'Error creating project');
     }
+  }
+
+  async addProjects() {
+  try {
+
+    const categories = await this.categoriesRepository.find();
+
+    type ProjectSeed = {
+      title: string;
+      resume: string,
+      description: string;
+      country: string;
+      goalAmount: number;
+      currentAmount: number;
+      imageUrls: string[];
+      status: 'active' | 'inactive' | 'completed';
+      category: string; 
+
+    };
+
+       for (const element of (data as any).default as ProjectSeed[]) {
+        const relatedCategory = categories.find(
+          (category) => category.name === element.category,
+        );
+   
+      if (!relatedCategory) {
+        throw new NotFoundException(
+          `Categoría '${element.category}' no encontrada para el proyecto '${element.title}'`,
+        );
+      }
+
+      const project = new Project();
+      project.title = element.title;
+      project.resume = element.resume;
+      project.description = element.description;
+      project.country = element.country;
+      project.goalAmount = element.goalAmount;
+      project.currentAmount = element.currentAmount;
+      project.imageUrls = element.imageUrls;
+      project.status = element.status;
+      project.category = relatedCategory;
+
+      await this.projectsRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Project)
+        .values(project)
+        .orUpdate(['resume', 'description', 'goalAmount'], ['title'])
+        .execute();
+    }
+    return 'Proyectos agregados';
+  } catch (error) {
+      console.error(error); 
+      throw new InternalServerErrorException('Error al agregar proyectos');
+  }
   }
 
   async getProjects() {

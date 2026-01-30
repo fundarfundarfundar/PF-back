@@ -17,7 +17,7 @@ export class Project {
   id: string;
 
   @ApiProperty({ example: 'Clean Water Initiative', description: 'Project title' })
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @ApiProperty({ example: 'Providing clean water to rural areas.', description: 'Short summary of the project' })
