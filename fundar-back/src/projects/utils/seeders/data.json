@@ -87,6 +87,36 @@
         ],
          "status": "active",
         "category": "housing construction"
+      },
+      {
+        "title": "housing construction",
+        "resume": "housing construction in Colombia",
+        "description": "The project is based on the construction of 10 houses for the Bolivar area",
+        "country": "Colombia",
+        "goalAmount": 120000,
+        "currentAmount": 100,
+        "imageUrls": ["https://res.cloudinary.com/dguogi7wq/image/upload/v1769897782/imgConstruccionCasa1_rbxmvy.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769897795/imgConstruccionCasa2_v0ikea.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769897813/imgConstruccionCasa3_wbh665.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769897828/imgConstruccionCasa4_dnpwy0.png"
+        ],
+         "status": "active",
+        "category": "housing construction"
+      },
+      {
+        "title": "school remodeling",
+        "resume": "school remodeling in Brazil",
+        "description": "The project is based on the construction of new event hall in a school in the Rio favela ",
+        "country": "Brazil",
+        "goalAmount": 10000,
+        "currentAmount": 4000,
+        "imageUrls": ["https://res.cloudinary.com/dguogi7wq/image/upload/v1769899073/imgEscuela1_urrffp.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769899090/imgEscuela2_tpnhuw.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769899118/imgEscuela3_awxpjy.png",
+        "https://res.cloudinary.com/dguogi7wq/image/upload/v1769899141/imgEscuela4_drrpbu.png"
+        ],
+         "status": "active",
+        "category": "education"
       }
 
 
