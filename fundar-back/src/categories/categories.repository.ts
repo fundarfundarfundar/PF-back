@@ -18,21 +18,35 @@ export class CategoriesRepository {
     private readonly categoriesRepository: Repository<Category>,
   ) {}
 
-  async createCategory(createCategoryDto: CreateCategoryDto) {
+  async findByName(name: string) {
+    return await this.categoriesRepository.findOne({
+      where: { name },
+    });
+  }
+
+ async createCategory(createCategoryDto: CreateCategoryDto) {
     try {
-      const existing = await this.categoriesRepository.findOne({
-        where: { name: createCategoryDto.name },
-      });
+      const existing = await this.findByName(createCategoryDto.name);
+
       if (existing) {
         throw new ConflictException(
           `There is already a category with the name ${createCategoryDto.name}`,
         );
       }
+
       const category = this.categoriesRepository.create(createCategoryDto);
+
       return await this.categoriesRepository.save(category);
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error creating category';
+
       throw new InternalServerErrorException(
-        `Error creating category: ${error.message}`,
+        `Error creating category: ${message}`,
       );
     }
   }
@@ -40,9 +54,15 @@ export class CategoriesRepository {
   async getCategories() {
     try {
       return this.categoriesRepository.find();
-    } catch (error) {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error retrieving categories';
+
       throw new InternalServerErrorException(
-        `Error retrieving categories: ${error.message}`,
+        `Error retrieving categories: ${message}`,
+
       );
     }
   }
@@ -56,9 +76,19 @@ export class CategoriesRepository {
         throw new NotFoundException(`Category with ID ${id} was not found`);
       }
       return category;
-    } catch (error) {
+    } catch  (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Error searching for category';
+
       throw new InternalServerErrorException(
-        `Error searching for category: ${error.message}`,
+        `Error searching for category: ${message}`,
+
       );
     }
   }
@@ -74,9 +104,17 @@ export class CategoriesRepository {
 
       await this.categoriesRepository.update(id, updateCategoryDto);
       return await this.categoriesRepository.findOne({ where: { id } });
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error updating category';
+
       throw new InternalServerErrorException(
-        `Error updating category: ${error.message}`,
+        `Error updating category: ${message}`,
+
       );
     }
   }
@@ -88,9 +126,17 @@ export class CategoriesRepository {
         throw new NotFoundException(`Category with ID ${id} was not found`);
       }
       return { message: `Category with ID ${id} successfully deleted.` };
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error deleting category';
+
       throw new InternalServerErrorException(
-        `Error deleting the category: ${error.message}`,
+        `Error deleting the category: ${message}`,
+
       );
     }
   }

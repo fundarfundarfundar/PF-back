@@ -34,8 +34,10 @@ export class ProjectsController {
   async getProjects() {
     try {
       return await this.projectsService.getProjects();      
-    } catch (error) {
-      throw new InternalServerErrorException(error.message || 'Error fetching projects');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error fetching projects';
+      throw new InternalServerErrorException(message);
     }
   }
   
@@ -54,8 +56,10 @@ export class ProjectsController {
   async filterProjects(@Query('category') category: string) {
     try {
       return await this.projectsService.filterByCategory(category);   
-    } catch (error) {
-      throw new InternalServerErrorException(error.message || 'Error filtering projects');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error filtering projects';
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -69,9 +73,11 @@ export class ProjectsController {
   async getProjectById(@Param('id') id: string) {
     try {
       return await this.projectsService.getProjectById(id);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error fetching project');
+      const message =
+        error instanceof Error ? error.message : 'Error fetching project';
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -103,9 +109,10 @@ export class ProjectsController {
   async create(@Body() createProjectDto: CreateProjectDto) {
     try {
       return await this.projectsService.createProject(createProjectDto);     
-    } catch (error) {
-      throw new InternalServerErrorException(error.message || 'Error creating project');
-
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error creating project';
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -142,9 +149,11 @@ export class ProjectsController {
     try {
       return await this.projectsService.updateProject(id, updateProjectDto);
       
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error updating project');
+      const message =
+        error instanceof Error ? error.message : 'Error updating project';
+      throw new InternalServerErrorException(message);
     }
   }
   @ApiBearerAuth()
@@ -159,9 +168,11 @@ export class ProjectsController {
   async removeProject(@Param('id') id: string) {
     try {
       return await this.projectsService.removeProject(id);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error deleting project');
+      const message =
+        error instanceof Error ? error.message : 'Error deleting project';
+      throw new InternalServerErrorException(message);
     }
   }
 }

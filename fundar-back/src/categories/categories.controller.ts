@@ -9,11 +9,12 @@ import {
   InternalServerErrorException,
   NotFoundException,
   UseGuards,
+  ConflictException,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiResponse, ApiParam, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Category } from './entities/category.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -44,9 +45,38 @@ export class CategoriesController {
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     try {
       return await this.categoriesService.createCategory(createCategoryDto);    
-    } catch (error) {
-      throw new InternalServerErrorException(error.message || 'Error creating category');
-    }
+    } catch (error: unknown) {
+        if (error instanceof ConflictException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error creating category';
+
+      throw new InternalServerErrorException(
+        `Error creating category: ${message}`,
+      );
+  }
+  }
+
+  @Get('seeder')
+  @ApiOperation({ summary: 'Agrega categorias de prueba' })
+  @ApiResponse({ status: 201, description: 'Categorias agregadas correctamente' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  async addCategories() {
+      try {
+    return await this.categoriesService.seedCategories();
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Error seeding categories';
+
+    throw new InternalServerErrorException(message);
+  }
   }
 
   @Get()
@@ -54,8 +84,11 @@ export class CategoriesController {
   async getCategories() {
     try {
       return await this.categoriesService.getCategories();    
-    } catch (error) {
-      throw new InternalServerErrorException(error.message || 'Error fetching categories');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error fetching categories';
+
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -65,9 +98,15 @@ export class CategoriesController {
   async GetCategoryById(@Param('id') id: string) {
     try {
       return await this.categoriesService.GetCategoryById(id);     
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error fetching category');
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error fetching category';
+
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -84,9 +123,15 @@ export class CategoriesController {
   ) {
     try {
       return await this.categoriesService.updateCategory(id, updateCategoryDto);      
-    } catch (error) {
-       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error updating category');
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error updating category';
+
+      throw new InternalServerErrorException(message);
     }
   }
 
@@ -99,9 +144,15 @@ export class CategoriesController {
   async deleteCategory(@Param('id') id: string) {
     try {
       return await this.categoriesService.deleteCategory(id);    
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(error.message || 'Error deleting category');
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : 'Error deleting category';
+
+      throw new InternalServerErrorException(message);
     }
   }
 }
